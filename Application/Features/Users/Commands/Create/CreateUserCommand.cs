@@ -1,13 +1,10 @@
+using Application.Features.Users.Dtos;
 using Domain.EntityModels;
 using MediatR;
 namespace Application.Features.Users.Commands.Create
 {
-    public class CreateUserCommand : IRequest<User>
+    public record CreateUserCommand : UserDto, IRequest<User>
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Image { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+
     }
 }

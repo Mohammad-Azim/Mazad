@@ -11,7 +11,7 @@ namespace Application.Services
 
         Task<TEntity> Create(TEntity entity);
 
-        Task<int> Update(TEntity entity);
+        Task<TEntity> Update(TEntity entity);
 
         Task<int> Delete(int Id);
     }

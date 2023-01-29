@@ -1,7 +1,6 @@
-
-namespace Application.Dtos
+namespace Application.Features.Users.Dtos
 {
-    public class UserDto
+    public record UserDto
     {
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;

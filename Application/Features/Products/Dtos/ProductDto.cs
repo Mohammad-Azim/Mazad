@@ -1,7 +1,8 @@
+using Domain.EntityModels;
 
-namespace Application.Dtos
+namespace Application.Features.Products.Dtos
 {
-    public class ProductDto
+    public record ProductDto
     {
         public string Name { get; set; } = null!;
         public string Image { get; set; } = null!;
@@ -11,7 +12,6 @@ namespace Application.Dtos
         public DateTime end_time { get; set; }
         public string Description { get; set; }
         public int OwnerId { get; set; }
-        public int BidId { get; set; }
-        public int CategoryId { get; set; }
+
     }
 }

@@ -21,8 +21,6 @@ namespace Application.Features.Users.Commands.Create
         {
             User user = _mapper.Map<User>(command);
 
-
-
             return await _userService.Create(user);
         }
 

@@ -16,7 +16,30 @@ namespace Infrastructure.Context
         {
             base.OnConfiguring(optionsBuilder);
         }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Product>()
+            .HasOne(p => p.Owner)
+            .WithMany(u => u.Products);
+
+            modelBuilder.Entity<Bid>()
+            .HasOne(p => p.user)
+            .WithMany(u => u.Bids);
+
+            modelBuilder.Entity<Bid>()
+            .HasOne(p => p.product)
+            .WithMany(u => u.Bids);
+        }
+
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Bid> Bids { get; set; }
+
 
         public async Task<int> SaveChangesAsync()
         {

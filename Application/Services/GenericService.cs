@@ -33,7 +33,7 @@ namespace Application.Services
         public async Task<int> Delete(int Id)
         {
 
-            TEntity entity = entities.SingleOrDefault(s => s.Id == Id);
+            var entity = entities.SingleOrDefault(s => s.Id == Id);
             if (entity != null)
             {
                 entities.Remove(entity);
@@ -45,7 +45,6 @@ namespace Application.Services
         public async Task<TEntity> GetById(int Id)
         {
             return await entities.AsNoTracking().Where(x => x.Id == Id).FirstOrDefaultAsync();
-
         }
 
         public async Task<List<TEntity>> GetAll()
@@ -53,10 +52,11 @@ namespace Application.Services
             return await entities.AsNoTracking().ToListAsync();
         }
 
-        public async Task<int> Update(TEntity studentDetails)
+        public async Task<TEntity> Update(TEntity entity)
         {
-            entities.Update(studentDetails);
-            return await _dbContext.SaveChangesAsync();
+            entities.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return entity;
         }
 
 

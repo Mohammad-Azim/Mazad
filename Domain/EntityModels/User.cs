@@ -11,5 +11,8 @@ namespace Domain.EntityModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public List<Product> Products { get; set; }
+        public List<Bid> Bids { get; set; }
+
     }
 }

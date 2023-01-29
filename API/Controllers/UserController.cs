@@ -1,5 +1,10 @@
-
 using Application.Features.Users.Commands.Create;
+using Application.Features.Users.Commands.Delete;
+using Application.Features.Users.Commands.Update;
+using Application.Features.Users.Dtos;
+using Application.Features.Users.Queries.GetList;
+using Application.Features.Users.Queries.GetWithEvents;
+using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,57 +16,51 @@ namespace API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IMediator mediator;
+        private readonly IMapper _mapper;
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, IMapper mapper)
         {
             this.mediator = mediator;
+            this._mapper = mapper;
         }
 
 
-        // [HttpGet]
+        [HttpGet]
+        public async Task<List<User>> GetUserListAsync()
+        {
+            var userDetails = await mediator.Send(new GetUserListQuery());
+            return userDetails;
+        }
 
-        // public async Task<List<User>> GetStudentListAsync()
-        // {
-
-
-        //     var studentDetails = await mediator.Send(new GetStudentListQuery());
-
-        //     return studentDetails;
-        // }
-
-        // [HttpGet("studentId")]
-        // public async Task<User> GetStudentByIdAsync(int studentId)
-        // {
-        //     var studentDetails = await mediator.Send(new GetStudentByIdQuery() { Id = studentId });
-
-        //     return studentDetails;
-        // }
+        [HttpGet("userId")]
+        public async Task<ActionResult<User>> GetUserByIdAsync(int userId)
+        {
+            var value = await mediator.Send(new GetUserByIdQuery() { Id = userId });
+            return (value != null ? Ok(value) : NotFound());
+        }
 
         [HttpPost]
-        public async Task<ActionResult<User>> AddStudentAsync([FromBody] CreateUserCommand user)
+        public async Task<ActionResult<User>> AddUserAsync([FromBody] CreateUserCommand user)
         {
-
-            var userDetail = await mediator.Send(user);
-            return Ok(userDetail);
+            var value = await mediator.Send(user);
+            return (value != null ? Ok(value) : BadRequest());
         }
 
-        // [HttpPut]
-        // public async Task<int> UpdateStudentAsync(User studentDetails)
-        // {
-        //     var isStudentDetailUpdated = await mediator.Send(new UpdateStudentCommand(
-        //        studentDetails.Id,
-        //        studentDetails.StudentName,
-        //        studentDetails.StudentEmail,
-        //        studentDetails.StudentAddress,
-        //        studentDetails.StudentAge));
-        //     return isStudentDetailUpdated;
-        // }
+        [HttpPut("userId")]
+        public async Task<ActionResult<User>> UpdateUserAsync([FromBody] UserDto userDto, int userId)
+        {
+            UpdateUserCommand user = _mapper.Map<UpdateUserCommand>(userDto);
+            user.Id = userId;
+            var value = await mediator.Send(user);
+            return (value != null ? Ok(value) : NotFound(user));
+        }
 
-        // [HttpDelete]
-        // public async Task<int> DeleteStudentAsync(int Id)
-        // {
-        //     return await mediator.Send(new DeleteStudentCommand() { Id = Id });
-        // }
+        [HttpDelete("userId")]
+        public async Task<ActionResult> DeleteUserAsync(int userId)
+        {
+            var value = await mediator.Send(new DeleteUserCommand() { Id = userId });
+            return (value != 0 ? Ok() : NotFound());
+        }
 
     }
 }
