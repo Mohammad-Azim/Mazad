@@ -1,4 +1,4 @@
-using Application.Features.Users.Commands.Create;
+using Application.Services.CategoryService;
 using Application.Services.ProductService;
 using Application.Services.UserService;
 using AutoMapper;
@@ -11,6 +11,7 @@ namespace Application.Features.Products.Commands.Create
     {
         private readonly IProductService _productService;
         private readonly IUserService _userService;
+        private readonly ICategoryService _categoryService;
 
         private readonly IMapper _mapper;
 
@@ -24,7 +25,8 @@ namespace Application.Features.Products.Commands.Create
         public async Task<Product> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
             var user = await _userService.GetById(command.OwnerId);
-            if (user != null)
+            var category = await _categoryService.GetById(command.CategoryId);
+            if (user != null && category != null)
             {
                 Product product = _mapper.Map<Product>(command);
                 product.EndTime = product.EndTime.ToUniversalTime();

@@ -13,6 +13,8 @@ namespace Application.Features.Products.Dtos
         public DateTime EndTime { get; set; }
         public string Description { get; set; }
         public int OwnerId { get; set; }
+        public int CategoryId { get; set; }
+
 
     }
 }

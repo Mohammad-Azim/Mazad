@@ -8,7 +8,6 @@ namespace Application.Services
 {
     public class GenericService<TEntity> : IDisposable, IGenericService<TEntity> where TEntity : BaseEntity
     {
-
         private readonly ApplicationDbContext _dbContext;
         private DbSet<TEntity> entities;
 
@@ -16,7 +15,6 @@ namespace Application.Services
         {
             _dbContext = dbContext;
             entities = dbContext.Set<TEntity>();
-
         }
         public void Dispose()
         {
@@ -32,7 +30,6 @@ namespace Application.Services
 
         public async Task<int> Delete(int Id)
         {
-
             var entity = entities.SingleOrDefault(s => s.Id == Id);
             if (entity != null)
             {

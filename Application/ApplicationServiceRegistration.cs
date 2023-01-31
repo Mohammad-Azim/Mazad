@@ -1,4 +1,5 @@
 using Application.Services.BidService;
+using Application.Services.CategoryService;
 using Application.Services.ProductService;
 using Application.Services.UserService;
 using FluentValidation.AspNetCore;
@@ -19,6 +20,7 @@ namespace Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBidService, BidService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddFluentValidation(options =>
                 {

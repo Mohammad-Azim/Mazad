@@ -1,6 +1,8 @@
 using Application.Features.Bids.Commands.Create;
 using Application.Features.Bids.Commands.Update;
 using Application.Features.Bids.Dtos;
+using Application.Features.Categories.Commands.Update;
+using Application.Features.Categories.Dtos;
 using Application.Features.Products.Commands.Create;
 using Application.Features.Products.Commands.Update;
 using Application.Features.Products.Dtos;
@@ -28,7 +30,7 @@ namespace Application.Helper.Profiles
             CreateMap<UpdateBidCommand, Bid>().ReverseMap();
             CreateMap<UpdateBidCommand, BidDto>().ReverseMap();
 
-
+            CreateMap<UpdateCategoryCommand, CategoryDto>().ReverseMap();
         }
     }
 }

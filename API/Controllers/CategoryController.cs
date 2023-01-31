@@ -1,9 +1,8 @@
-using Application.Features.Bids.Commands.Create;
-using Application.Features.Bids.Commands.Delete;
-using Application.Features.Bids.Commands.Update;
-using Application.Features.Bids.Dtos;
-using Application.Features.Bids.Queries.GetList;
-using Application.Features.Bids.Queries.GetWithEvents;
+using Application.Features.Categories.Commands.Delete;
+using Application.Features.Categories.Commands.Update;
+using Application.Features.Categories.Dtos;
+using Application.Features.Categories.Queries.GetList;
+using Application.Features.Categories.Queries.GetWithEvents;
 using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
@@ -13,23 +12,21 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BidController : ControllerBase
+    public class CategoryController : ControllerBase
     {
         private readonly IMediator mediator;
         private readonly IMapper _mapper;
 
-
-        public BidController(IMediator mediator, IMapper mapper)
+        public CategoryController(IMediator mediator, IMapper mapper)
         {
             this.mediator = mediator;
             this._mapper = mapper;
         }
 
-
         [HttpGet]
-        public async Task<List<Bid>> GetBidListAsync()
+        public async Task<List<Category>> GetCategoryListAsync()
         {
-            var value = await mediator.Send(new GetBidListQuery());
+            var value = await mediator.Send(new GetCategoryListQuery());
             return value;
         }
 
@@ -37,24 +34,22 @@ namespace API.Controllers
         [Route("bid-by-id")]
         public async Task<ActionResult<User>> GetBidByIdAsync(int id)
         {
-            var value = await mediator.Send(new GetBidByIdQuery() { Id = id });
+            var value = await mediator.Send(new GetCategoryByIdQuery() { Id = id });
             return (value != null ? Ok(value) : NotFound());
         }
 
-
-
         [HttpPost]
-        public async Task<ActionResult<Bid>> AddBidAsync([FromBody] CreateBidCommand bid)
+        public async Task<ActionResult<Category>> AddBidAsync([FromBody] CategoryDto category)
         {
-            var value = await mediator.Send(bid);
+            var value = await mediator.Send(category);
             return (value != null ? Ok(value) : BadRequest());
         }
 
         [HttpPut]
         [Route("bid-by-id")]
-        public async Task<ActionResult<Product>> UpdateProductAsync([FromBody] BidDto bidDto, int id)
+        public async Task<ActionResult<Product>> UpdateProductAsync([FromBody] CategoryDto categoryDto, int id)
         {
-            UpdateBidCommand bid = _mapper.Map<UpdateBidCommand>(bidDto);
+            UpdateCategoryCommand bid = _mapper.Map<UpdateCategoryCommand>(categoryDto);
             bid.Id = id;
             var value = await mediator.Send(bid);
             return (value != null ? Ok(value) : NotFound(bid));
@@ -64,10 +59,9 @@ namespace API.Controllers
         [Route("bid-by-id")]
         public async Task<ActionResult> DeleteBidAsync(int id)
         {
-            var value = await mediator.Send(new DeleteBidCommand() { Id = id });
+            var value = await mediator.Send(new DeleteCategoryCommand() { Id = id });
             return (value != 0 ? Ok() : NotFound());
         }
-
 
 
     }
