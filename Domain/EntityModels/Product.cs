@@ -17,7 +17,7 @@ namespace Domain.EntityModels
         public int OwnerId { get; set; }
         public User Owner { get; set; }
         public List<Bid> Bids { get; set; }
-
-        // public int CategoryId { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }
