@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-
 namespace Application
 {
     public static class ApplicationServiceRegistration
@@ -22,11 +21,7 @@ namespace Application
             services.AddScoped<IBidService, BidService>();
             services.AddScoped<ICategoryService, CategoryService>();
 
-            services.AddFluentValidation(options =>
-                {
-                    options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-                });
-
+            services.AddFluentValidation(options => options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 
             return services;
         }

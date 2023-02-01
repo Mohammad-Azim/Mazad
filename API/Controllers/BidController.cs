@@ -29,8 +29,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<List<Bid>> GetBidListAsync()
         {
-            var value = await mediator.Send(new GetBidListQuery());
-            return value;
+            return await mediator.Send(new GetBidListQuery());
         }
 
         [HttpGet]
@@ -38,7 +37,7 @@ namespace API.Controllers
         public async Task<ActionResult<User>> GetBidByIdAsync(int id)
         {
             var value = await mediator.Send(new GetBidByIdQuery() { Id = id });
-            return (value != null ? Ok(value) : NotFound());
+            return value != null ? Ok(value) : NotFound();
         }
 
 
@@ -47,7 +46,7 @@ namespace API.Controllers
         public async Task<ActionResult<Bid>> AddBidAsync([FromBody] CreateBidCommand bid)
         {
             var value = await mediator.Send(bid);
-            return (value != null ? Ok(value) : BadRequest());
+            return value != null ? Ok(value) : BadRequest();
         }
 
         [HttpPut]
@@ -57,7 +56,7 @@ namespace API.Controllers
             UpdateBidCommand bid = _mapper.Map<UpdateBidCommand>(bidDto);
             bid.Id = id;
             var value = await mediator.Send(bid);
-            return (value != null ? Ok(value) : NotFound(bid));
+            return value != null ? Ok(value) : NotFound(bid);
         }
 
         [HttpDelete]
@@ -65,10 +64,7 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteBidAsync(int id)
         {
             var value = await mediator.Send(new DeleteBidCommand() { Id = id });
-            return (value != 0 ? Ok() : NotFound());
+            return value != 0 ? Ok() : NotFound();
         }
-
-
-
     }
 }

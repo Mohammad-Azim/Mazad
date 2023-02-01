@@ -5,27 +5,23 @@ namespace Application.Features.Bids.Commands.Create
 {
     public class CreateBidCommandValidation : AbstractValidator<CreateBidCommand>
     {
-
-        private readonly IProductService _productService;
-        public CreateBidCommandValidation(IProductService productService)
+        // private readonly IProductService _productService;
+        public CreateBidCommandValidation()
         {
-            _productService = productService;
+            // IProductService productService
+            // _productService = productService;
 
-            RuleFor(s => s.BidPrice).NotEqual(0).GreaterThan(0).WithMessage("Please Bid Price should be more than 0");
-            RuleFor(s => s.ProductId).NotNull().WithMessage("You Should specify Product Id");
-
-
-
+            RuleFor(b => b.BidPrice).NotEqual(0).GreaterThan(0).WithMessage("Please Bid Price should be more than 0");
+            RuleFor(b => b.ProductId).NotNull().WithMessage("You Should specify Product Id");
+            // RuleFor(b => b)
+            //  .MustAsync(IsBidFromOwner)
+            //  .WithMessage("Can't bid on your own product");
         }
 
-        // private async Task<bool> IsNotProductOwner(CreateBidCommand command, CancellationToken cancellationToken)
+        // private async Task<bool> IsBidFromOwner(CreateBidCommand b, CancellationToken token)
         // {
-        //     var product = await _productService.GetById(command.ProductId);
-        //     if (product.OwnerId == command.UserId)
-        //     {
-        //         return false;
-        //     }
-        //     return true;
+        //     var product = await _productService.GetById(b.ProductId);
+        //     return product.OwnerId == b.UserId;
         // }
     }
 }

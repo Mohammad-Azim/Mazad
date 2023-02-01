@@ -1,21 +1,16 @@
 using Application;
-using FluentValidation.AspNetCore;
+using Application.Helper.Middleware;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add services to the container.
 builder.Services.AddApplicationServices();
 
-
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-
-
 
 builder.Services.AddControllers();
 
@@ -31,6 +26,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// app.UseMiddleware<BidMiddleware>();
+app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
 
