@@ -1,4 +1,5 @@
 using Application;
+using FluentValidation.AspNetCore;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +14,6 @@ builder.Services.AddApplicationServices();
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-
-
 
 
 

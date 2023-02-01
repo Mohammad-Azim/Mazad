@@ -15,11 +15,12 @@ namespace Application.Features.Products.Commands.Create
 
         private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IProductService productService, IUserService userService, IMapper mapper)
+        public CreateProductCommandHandler(IProductService productService, IUserService userService, ICategoryService categoryService, IMapper mapper)
         {
             _productService = productService;
-            _mapper = mapper;
             _userService = userService;
+            _categoryService = categoryService;
+            _mapper = mapper;
         }
 
         public async Task<Product> Handle(CreateProductCommand command, CancellationToken cancellationToken)

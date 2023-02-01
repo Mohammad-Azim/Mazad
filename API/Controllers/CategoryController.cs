@@ -32,14 +32,14 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("bid-by-id")]
-        public async Task<ActionResult<User>> GetBidByIdAsync(int id)
+        public async Task<ActionResult<Category>> GetCategoryByIdAsync(int id)
         {
             var value = await mediator.Send(new GetCategoryByIdQuery() { Id = id });
             return (value != null ? Ok(value) : NotFound());
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> AddBidAsync([FromBody] CategoryDto category)
+        public async Task<ActionResult<Category>> AddCategoryAsync([FromBody] CategoryDto category)
         {
             var value = await mediator.Send(category);
             return (value != null ? Ok(value) : BadRequest());
@@ -47,7 +47,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("bid-by-id")]
-        public async Task<ActionResult<Product>> UpdateProductAsync([FromBody] CategoryDto categoryDto, int id)
+        public async Task<ActionResult<Category>> UpdateCategoryAsync([FromBody] CategoryDto categoryDto, int id)
         {
             UpdateCategoryCommand bid = _mapper.Map<UpdateCategoryCommand>(categoryDto);
             bid.Id = id;
