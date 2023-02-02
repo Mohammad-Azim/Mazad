@@ -1,7 +1,6 @@
 
 
-using Application.Domain.Entity;
-
+using Application.Domain.Common.Entity;
 namespace Domain.EntityModels
 {
     public class Product : BaseEntity, IEntity

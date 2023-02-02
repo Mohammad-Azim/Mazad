@@ -6,6 +6,8 @@ using Application.Features.Bids.Queries.GetList;
 using Application.Features.Bids.Queries.GetWithEvents;
 using AutoMapper;
 using Domain.EntityModels;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,13 +20,15 @@ namespace API.Controllers
         private readonly IMediator mediator;
         private readonly IMapper _mapper;
 
+        private IValidator<CreateBidCommand> _validator;
 
-        public BidController(IMediator mediator, IMapper mapper)
+
+        public BidController(IMediator mediator, IMapper mapper, IValidator<CreateBidCommand> validator)
         {
             this.mediator = mediator;
+            _validator = validator;
             this._mapper = mapper;
         }
-
 
         [HttpGet]
         public async Task<List<Bid>> GetBidListAsync()
@@ -40,11 +44,15 @@ namespace API.Controllers
             return value != null ? Ok(value) : NotFound();
         }
 
-
-
         [HttpPost]
         public async Task<ActionResult<Bid>> AddBidAsync([FromBody] CreateBidCommand bid)
         {
+            ValidationResult results = await _validator.ValidateAsync(bid);
+            if (!results.IsValid)
+            {
+                return Unauthorized(results.ToDictionary());
+            }
+
             var value = await mediator.Send(bid);
             return value != null ? Ok(value) : BadRequest();
         }

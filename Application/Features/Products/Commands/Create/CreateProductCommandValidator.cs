@@ -23,11 +23,7 @@ namespace Application.Features.Products.Commands.Create
 
         private bool CheckEndTime(DateTime time)
         {
-            if (DateTime.UtcNow.AddHours(20) <= time)
-            {
-                return true;
-            }
-            return false;
+            return DateTime.UtcNow.AddHours(20) <= time;
         }
     }
 }

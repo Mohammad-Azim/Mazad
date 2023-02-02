@@ -1,7 +1,9 @@
+using Application.Features.Bids.Commands.Create;
 using Application.Services.BidService;
 using Application.Services.CategoryService;
 using Application.Services.ProductService;
 using Application.Services.UserService;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +22,14 @@ namespace Application
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBidService, BidService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IValidator<CreateBidCommand>, CreateBidCommandValidation>();
 
-            services.AddFluentValidation(options => options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
+            // services.AddFluentValidation(options =>
+            // {
+            //     options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            //     options.AutomaticValidationEnabled = false;
+            // });
 
             return services;
         }

@@ -26,8 +26,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<List<Category>> GetCategoryListAsync()
         {
-            var value = await mediator.Send(new GetCategoryListQuery());
-            return value;
+            return await mediator.Send(new GetCategoryListQuery());
         }
 
         [HttpGet]
@@ -35,14 +34,14 @@ namespace API.Controllers
         public async Task<ActionResult<Category>> GetCategoryByIdAsync(int id)
         {
             var value = await mediator.Send(new GetCategoryByIdQuery() { Id = id });
-            return (value != null ? Ok(value) : NotFound());
+            return value != null ? Ok(value) : NotFound();
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> AddCategoryAsync([FromBody] CategoryDto category)
         {
             var value = await mediator.Send(category);
-            return (value != null ? Ok(value) : BadRequest());
+            return value != null ? Ok(value) : BadRequest();
         }
 
         [HttpPut]
@@ -52,7 +51,7 @@ namespace API.Controllers
             UpdateCategoryCommand bid = _mapper.Map<UpdateCategoryCommand>(categoryDto);
             bid.Id = id;
             var value = await mediator.Send(bid);
-            return (value != null ? Ok(value) : NotFound(bid));
+            return value != null ? Ok(value) : NotFound(bid);
         }
 
         [HttpDelete]
@@ -60,7 +59,7 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteBidAsync(int id)
         {
             var value = await mediator.Send(new DeleteCategoryCommand() { Id = id });
-            return (value != 0 ? Ok() : NotFound());
+            return value != 0 ? Ok() : NotFound();
         }
 
 

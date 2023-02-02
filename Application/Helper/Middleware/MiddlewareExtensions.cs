@@ -7,7 +7,7 @@ namespace Application.Helper.Middleware
         public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder)
         {
             builder.UseMiddleware<ExceptionHandlerMiddleware>();
-            builder.UseMiddleware<BidMiddleware>();
+            // builder.UseMiddleware<BidMiddleware>();
             return builder;
         }
     }

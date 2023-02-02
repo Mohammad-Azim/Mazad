@@ -1,5 +1,5 @@
 
-namespace Application.Domain.Entity
+namespace Application.Domain.Common.Entity
 {
     public interface IEntity
     {

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Net;
+
 
 namespace Application.Helper.Middleware
 {
@@ -18,12 +17,8 @@ namespace Application.Helper.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-
             await _next(context);
             _logger.LogInformation("MyMiddleware executing.. MyCustomMiddleware");
-
         }
-
-
     }
 }

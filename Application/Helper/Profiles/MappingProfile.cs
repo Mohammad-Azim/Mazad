@@ -32,6 +32,7 @@ namespace Application.Helper.Profiles
 
             CreateMap<UpdateCategoryCommand, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<UpdateProductCommand, CreateProductCommand>().ReverseMap();
         }
     }
 }

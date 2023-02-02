@@ -25,12 +25,10 @@ namespace API.Controllers
             this._mapper = mapper;
         }
 
-
         [HttpGet]
         public async Task<List<Product>> GetProductListAsync()
         {
-            var value = await mediator.Send(new GetProductListQuery());
-            return value;
+            return await mediator.Send(new GetProductListQuery());
         }
 
         [HttpGet]
@@ -38,36 +36,33 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> GetProductByIdAsync(int id)
         {
             var value = await mediator.Send(new GetProductByIdQuery() { Id = id });
-            return (value != null ? Ok(value) : NotFound());
+            return value != null ? Ok(value) : NotFound();
         }
-
 
         [HttpPost]
         public async Task<ActionResult<Product>> AddProductAsync([FromBody] CreateProductCommand product)
         {
-            var value = await mediator.Send(product);
-            return (value != null ? Ok(value) : BadRequest());
+            var response = await mediator.Send(product);
+            return Ok(response);
         }
-
 
         [HttpPut]
         [Route("product-by-id")]
         public async Task<ActionResult<Product>> UpdateProductAsync([FromBody] ProductDto productDto, int id)
+        // #??#  command for create and another one for update then i will need to repeat the validator 
         {
             UpdateProductCommand product = _mapper.Map<UpdateProductCommand>(productDto);
             product.Id = id;
             var value = await mediator.Send(product);
-            return (value != null ? Ok(value) : NotFound(product));
+            return value != null ? Ok(value) : NotFound(product);
         }
-
 
         [HttpDelete]
         [Route("product-by-id")]
         public async Task<ActionResult> DeleteProductAsync(int id)
         {
             var value = await mediator.Send(new DeleteProductCommand() { Id = id });
-            return (value != 0 ? Ok() : NotFound());
+            return Ok(value);
         }
-
     }
 }

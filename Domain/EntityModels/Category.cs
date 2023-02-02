@@ -1,6 +1,5 @@
 
-using Application.Domain.Entity;
-
+using Application.Domain.Common.Entity;
 namespace Domain.EntityModels
 {
     public class Category : BaseEntity, IEntity

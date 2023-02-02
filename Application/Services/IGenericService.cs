@@ -1,5 +1,5 @@
 
-using Application.Domain.Entity;
+using Application.Domain.Common.Entity;
 
 namespace Application.Services
 {
