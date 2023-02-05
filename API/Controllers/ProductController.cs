@@ -1,7 +1,6 @@
 using Application.Features.Products.Commands.Create;
 using Application.Features.Products.Commands.Delete;
 using Application.Features.Products.Commands.Update;
-using Application.Features.Products.Dtos;
 using Application.Features.Products.Queries.GetList;
 using Application.Features.Products.Queries.GetWithEvents;
 using AutoMapper;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -26,7 +24,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Product>> GetProductListAsync()
+        public async Task<GetListProductQueryResponse> GetProductListAsync()
         {
             return await mediator.Send(new GetProductListQuery());
         }
@@ -40,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> AddProductAsync([FromBody] CreateProductCommand product)
+        public async Task<ActionResult<CreateProductCommandResponse>> AddProductAsync([FromBody] CreateProductCommand product)
         {
             var response = await mediator.Send(product);
             return Ok(response);
@@ -48,18 +46,18 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("product-by-id")]
-        public async Task<ActionResult<Product>> UpdateProductAsync([FromBody] ProductDto productDto, int id)
+        public async Task<ActionResult<UpdateProductCommandResponse>> UpdateProductAsync([FromBody] CreateProductCommand productDto, int id) // #??# make update and AddProduct both DTO or create
         // #??#  command for create and another one for update then i will need to repeat the validator 
         {
             UpdateProductCommand product = _mapper.Map<UpdateProductCommand>(productDto);
             product.Id = id;
             var value = await mediator.Send(product);
-            return value != null ? Ok(value) : NotFound(product);
+            return Ok(value);
         }
 
         [HttpDelete]
         [Route("product-by-id")]
-        public async Task<ActionResult> DeleteProductAsync(int id)
+        public async Task<ActionResult<DeleteProductCommandResponse>> DeleteProductAsync(int id)
         {
             var value = await mediator.Send(new DeleteProductCommand() { Id = id });
             return Ok(value);

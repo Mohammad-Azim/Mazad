@@ -15,21 +15,20 @@ namespace API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
         public UserController(IMediator mediator, IMapper mapper)
         {
-            this.mediator = mediator;
-            this._mapper = mapper;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
 
         [HttpGet]
         public async Task<List<User>> GetUserListAsync()
         {
-            var userDetails = await mediator.Send(new GetUserListQuery());
-            return userDetails;
+            return await _mediator.Send(new GetUserListQuery());
         }
 
         [HttpGet]
@@ -37,15 +36,15 @@ namespace API.Controllers
 
         public async Task<ActionResult<User>> GetUserByIdAsync(int id)
         {
-            var value = await mediator.Send(new GetUserByIdQuery() { Id = id });
-            return (value != null ? Ok(value) : NotFound());
+            var value = await _mediator.Send(new GetUserByIdQuery() { Id = id });
+            return value != null ? Ok(value) : NotFound();
         }
 
         [HttpPost]
         public async Task<ActionResult<User>> AddUserAsync([FromBody] CreateUserCommand user)
         {
-            var value = await mediator.Send(user);
-            return (value != null ? Ok(value) : BadRequest());
+            var value = await _mediator.Send(user);
+            return value != null ? Ok(value) : BadRequest();
         }
 
         [HttpPut]
@@ -54,16 +53,16 @@ namespace API.Controllers
         {
             UpdateUserCommand user = _mapper.Map<UpdateUserCommand>(userDto);
             user.Id = id;
-            var value = await mediator.Send(user);
-            return (value != null ? Ok(value) : NotFound(user));
+            var value = await _mediator.Send(user);
+            return value != null ? Ok(value) : NotFound(user);
         }
 
         [HttpDelete]
         [Route("user-by-id")]
         public async Task<ActionResult> DeleteUserAsync(int id)
         {
-            var value = await mediator.Send(new DeleteUserCommand() { Id = id });
-            return (value != 0 ? Ok() : NotFound());
+            var value = await _mediator.Send(new DeleteUserCommand() { Id = id });
+            return value != 0 ? Ok() : NotFound();
         }
 
     }

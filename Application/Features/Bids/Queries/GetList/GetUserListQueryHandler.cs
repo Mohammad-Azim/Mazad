@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Bids.Queries.GetList
 {
-    public class GetBidListQueryHandler : IRequestHandler<GetBidListQuery, List<Bid>>
+    public class GetBidListQueryHandler : IRequestHandler<GetBidListQuery, GetListBidQueryResponse>
     {
         private readonly IBidService _bidService;
 
@@ -13,9 +13,12 @@ namespace Application.Features.Bids.Queries.GetList
         {
             _bidService = bidService;
         }
-        public async Task<List<Bid>> Handle(GetBidListQuery request, CancellationToken cancellationToken)
+        public async Task<GetListBidQueryResponse> Handle(GetBidListQuery request, CancellationToken cancellationToken)
         {
-            return await _bidService.GetAll();
+            var getListBidQueryResponse = new GetListBidQueryResponse();
+            var data = await _bidService.GetAll();
+            getListBidQueryResponse.SuccessResponse(data);
+            return getListBidQueryResponse;
         }
     }
 }

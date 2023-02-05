@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Bids.Commands.Update
 {
-    public record UpdateBidCommand : BidDto, IRequest<Bid>
+    public record UpdateBidCommand : BidDto, IRequest<UpdateBidCommandResponse>
     {
         public int Id { get; set; }
     }

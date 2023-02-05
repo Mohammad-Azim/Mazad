@@ -1,4 +1,4 @@
-namespace Domain.Common.Response
+namespace Application.Helper.Response
 {
     public enum CodeStatusEnum
     {

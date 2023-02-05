@@ -3,6 +3,7 @@ using Application.Features.Categories.Commands.Update;
 using Application.Features.Categories.Dtos;
 using Application.Features.Categories.Queries.GetList;
 using Application.Features.Categories.Queries.GetWithEvents;
+using Application.Features.Products.Queries.GetWithEvents;
 using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
@@ -24,14 +25,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Category>> GetCategoryListAsync()
+        public async Task<GetListCategoryQueryResponse> GetCategoryListAsync()
         {
             return await mediator.Send(new GetCategoryListQuery());
         }
 
         [HttpGet]
         [Route("bid-by-id")]
-        public async Task<ActionResult<Category>> GetCategoryByIdAsync(int id)
+        public async Task<ActionResult<GetCategoryByIdQueryResponse>> GetCategoryByIdAsync(int id)
         {
             var value = await mediator.Send(new GetCategoryByIdQuery() { Id = id });
             return value != null ? Ok(value) : NotFound();
@@ -56,10 +57,10 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("bid-by-id")]
-        public async Task<ActionResult> DeleteBidAsync(int id)
+        public async Task<ActionResult<DeleteCategoryCommandResponse>> DeleteBidAsync(int id)
         {
             var value = await mediator.Send(new DeleteCategoryCommand() { Id = id });
-            return value != 0 ? Ok() : NotFound();
+            return Ok(value);
         }
 
 

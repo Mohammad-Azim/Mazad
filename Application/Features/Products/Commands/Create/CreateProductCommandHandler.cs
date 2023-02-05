@@ -1,9 +1,7 @@
-using Application.Services.CategoryService;
 using Application.Services.ProductService;
-using Application.Services.UserService;
 using AutoMapper;
-using Domain.Common.Response;
 using Domain.EntityModels;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Features.Products.Commands.Create
@@ -11,15 +9,13 @@ namespace Application.Features.Products.Commands.Create
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, CreateProductCommandResponse>
     {
         private readonly IProductService _productService;
-        private readonly IUserService _userService;
-        private readonly ICategoryService _categoryService;
+        private readonly IValidator<CreateProductCommand> _validator;
         private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IProductService productService, IUserService userService, ICategoryService categoryService, IMapper mapper)
+        public CreateProductCommandHandler(IProductService productService, IValidator<CreateProductCommand> validator, IMapper mapper)
         {
             _productService = productService;
-            _userService = userService;
-            _categoryService = categoryService;
+            _validator = validator;
             _mapper = mapper;
         }
 
@@ -27,36 +23,20 @@ namespace Application.Features.Products.Commands.Create
         {
             var createProductCommandResponse = new CreateProductCommandResponse();
 
-            var validator = new CreateProductCommandValidator();
-            var validationResult = validator.Validate(command);
-            var user = await _userService.GetById(command.OwnerId);
-            var category = await _categoryService.GetById(command.CategoryId);
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
-            if (validationResult.Errors.Count > 0 || user == null || category == null)
+            // #??# these two if statement repeated !!(Repeated code) 
+            if (validationResult.Errors.Count > 0)
             {
-                createProductCommandResponse.Success = false;
-                createProductCommandResponse.ValidationErrors = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    createProductCommandResponse.ValidationErrors.Add(error.ErrorMessage);
-                }
-                if (user == null)
-                {
-                    createProductCommandResponse.ValidationErrors.Add("User Not Found");
-                }
-                if (category == null)
-                {
-                    createProductCommandResponse.ValidationErrors.Add("Category Not Found");
-                }
-                createProductCommandResponse.StatusCode = CodeStatusEnum.UnprocessableEntity;
+                createProductCommandResponse.ErrorsResponse(validationResult.Errors);
             }
 
             if (createProductCommandResponse.Success)
             {
                 Product product = _mapper.Map<Product>(command);
                 product.EndTime = product.EndTime.ToUniversalTime();
-                createProductCommandResponse.Data = await _productService.Create(product);
-                createProductCommandResponse.StatusCode = CodeStatusEnum.Ok;
+                var data = await _productService.Create(product);
+                createProductCommandResponse.SuccessResponse(data);
                 // #??# createProductCommandResponse.message && try catch 
             }
             return createProductCommandResponse;

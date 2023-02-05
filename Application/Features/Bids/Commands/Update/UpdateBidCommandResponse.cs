@@ -1,0 +1,7 @@
+using Application.Helper.Response;
+using Domain.EntityModels;
+
+namespace Application.Features.Bids.Commands.Update
+{
+    public class UpdateBidCommandResponse : BaseResponse<Bid> { }
+}

@@ -1,4 +1,5 @@
 using Application.Features.Bids.Commands.Create;
+using Application.Features.Products.Commands.Create;
 using Application.Services.BidService;
 using Application.Services.CategoryService;
 using Application.Services.ProductService;
@@ -22,14 +23,9 @@ namespace Application
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBidService, BidService>();
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IValidator<CreateBidCommand>, CreateBidCommandValidation>();
 
-
-            // services.AddFluentValidation(options =>
-            // {
-            //     options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            //     options.AutomaticValidationEnabled = false;
-            // });
+            services.AddValidatorsFromAssemblyContaining<CreateProductCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<CreateBidCommandValidation>();
 
             return services;
         }

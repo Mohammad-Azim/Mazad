@@ -1,22 +1,15 @@
 using Application.Services.BidService;
-using Application.Services.ProductService;
-using Application.Services.UserService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
-using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Application.Features.Bids.Commands.Create
 {
-    public class CreateBidCommandHandler : IRequestHandler<CreateBidCommand, Bid>
+    public class CreateBidCommandHandler : IRequestHandler<CreateBidCommand, CreateBidCommandResponse>
     {
-        private readonly IProductService _productService;
-        private IValidator<CreateBidCommand> _validator;
-
-        private readonly IUserService _userService;
+        private readonly IValidator<CreateBidCommand> _validator;
 
         private readonly IBidService _bidService;
 
@@ -24,38 +17,31 @@ namespace Application.Features.Bids.Commands.Create
 
         public ModelStateDictionary ModelState { get; set; }
 
-        public CreateBidCommandHandler(IProductService productService, IUserService userService, IBidService bidService, IValidator<CreateBidCommand> validator, IMapper mapper)
+        public CreateBidCommandHandler(IBidService bidService, IValidator<CreateBidCommand> validator, IMapper mapper)
         {
-            _mapper = mapper;
-            _productService = productService;
-            _validator = validator;
-            _userService = userService;
             _bidService = bidService;
+            _validator = validator;
+            _mapper = mapper;
         }
 
-        public async Task<Bid> Handle(CreateBidCommand command, CancellationToken cancellationToken)
+        public async Task<CreateBidCommandResponse> Handle(CreateBidCommand command, CancellationToken cancellationToken)
         {
-            ValidationResult results = await _validator.ValidateAsync(command, cancellationToken);
-            if (!results.IsValid)
-            {
 
-            }
+            var createBidCommandResponse = new CreateBidCommandResponse();
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
-            var validator = new CreateBidCommandValidation(_productService);
-            var result = await validator.ValidateAsync(command, cancellationToken);
-            if (!result.IsValid)
+            if (validationResult.Errors.Count > 0)
             {
-                return null;
+                createBidCommandResponse.ErrorsResponse(validationResult.Errors);
             }
-            var user = await _userService.GetById(command.UserId);
-            var product = await _productService.GetById(command.ProductId);
-            if (user != null && product != null)
+            if (createBidCommandResponse.Success)
             {
                 Bid bid = _mapper.Map<Bid>(command);
                 bid.Date = DateTime.UtcNow;
-                return await _bidService.Create(bid);
+                var data = await _bidService.Create(bid);
+                createBidCommandResponse.SuccessResponse(data);
             }
-            return null;
+            return createBidCommandResponse;
         }
     }
 }

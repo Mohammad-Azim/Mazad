@@ -1,6 +1,4 @@
 using Application.Services.ProductService;
-using AutoMapper;
-using Domain.Common.Response;
 using MediatR;
 
 namespace Application.Features.Products.Commands.Delete
@@ -21,14 +19,11 @@ namespace Application.Features.Products.Commands.Delete
             var result = await _productService.Delete(request.Id);
             if (result == 0)
             {
-                deleteProductCommandResponse.Success = false;
-                deleteProductCommandResponse.Message = "Deleting Failed: Product Not Found";
-                deleteProductCommandResponse.StatusCode = CodeStatusEnum.NotFound;
+                deleteProductCommandResponse.NotFoundResponse();
             }
             if (deleteProductCommandResponse.Success)
             {
-                deleteProductCommandResponse.Message = "Product Deleted Successfully";
-                deleteProductCommandResponse.StatusCode = CodeStatusEnum.Ok;
+                deleteProductCommandResponse.SuccessResponse();
             }
             return deleteProductCommandResponse;
         }

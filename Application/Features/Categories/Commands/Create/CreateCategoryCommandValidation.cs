@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Features.Categories.Commands.Create
 {
-    public class CreateBidCommandValidation : AbstractValidator<CategoryDto>
+    public class CreateBidCommandValidation : AbstractValidator<CreateCategoryCommand>
     {
         public CreateBidCommandValidation()
         {

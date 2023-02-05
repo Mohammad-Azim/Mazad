@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Categories.Commands.Update
 {
-    public record UpdateCategoryCommand : CategoryDto
+    public record UpdateCategoryCommand : CategoryDto, IRequest<UpdateCategoryCommandResponse>
     {
         public int Id { get; set; }
     }
