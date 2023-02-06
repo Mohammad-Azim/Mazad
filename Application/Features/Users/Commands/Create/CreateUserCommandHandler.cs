@@ -1,4 +1,3 @@
-
 using Application.Services.UserService;
 using AutoMapper;
 using Domain.EntityModels;
@@ -23,6 +22,5 @@ namespace Application.Features.Users.Commands.Create
 
             return await _userService.Create(user);
         }
-
     }
 }

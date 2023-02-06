@@ -1,4 +1,3 @@
-using Application.Features.Products.Commands.Create;
 using Application.Services.CategoryService;
 using AutoMapper;
 using Domain.EntityModels;
@@ -37,8 +36,6 @@ namespace Application.Features.Categories.Commands.Create
                 createCategoryCommandResponse.SuccessResponse(data);
             }
             return createCategoryCommandResponse;
-
-
         }
     }
 }

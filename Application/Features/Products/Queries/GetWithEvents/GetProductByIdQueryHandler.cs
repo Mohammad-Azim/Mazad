@@ -7,7 +7,6 @@ namespace Application.Features.Products.Queries.GetWithEvents
     {
         private readonly IProductService _productService;
 
-
         public GetProductByIdQueryHandler(IProductService ProductService)
         {
             _productService = ProductService;
@@ -27,7 +26,5 @@ namespace Application.Features.Products.Queries.GetWithEvents
             }
             return getProductByIdQueryResponse;
         }
-
-
     }
 }

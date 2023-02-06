@@ -1,5 +1,4 @@
 using Application.Services.CategoryService;
-using Domain.EntityModels;
 using MediatR;
 
 namespace Application.Features.Categories.Queries.GetWithEvents
@@ -14,7 +13,6 @@ namespace Application.Features.Categories.Queries.GetWithEvents
         }
         public async Task<GetCategoryByIdQueryResponse> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-
             var getCategoryByIdQueryResponse = new GetCategoryByIdQueryResponse();
 
             var data = await _categoryService.GetById(request.Id);
@@ -27,7 +25,6 @@ namespace Application.Features.Categories.Queries.GetWithEvents
                 getCategoryByIdQueryResponse.NotFoundResponse();
             }
             return getCategoryByIdQueryResponse;
-
         }
     }
 }

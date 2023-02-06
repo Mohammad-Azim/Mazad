@@ -1,6 +1,5 @@
 using Application.Features.Bids.Commands.Create;
 using Application.Features.Bids.Commands.Update;
-using Application.Features.Bids.Dtos;
 using Application.Features.Categories.Commands.Update;
 using Application.Features.Categories.Dtos;
 using Application.Features.Products.Commands.Create;

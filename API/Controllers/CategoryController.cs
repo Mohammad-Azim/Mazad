@@ -3,7 +3,6 @@ using Application.Features.Categories.Commands.Update;
 using Application.Features.Categories.Dtos;
 using Application.Features.Categories.Queries.GetList;
 using Application.Features.Categories.Queries.GetWithEvents;
-using Application.Features.Products.Queries.GetWithEvents;
 using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
@@ -62,7 +61,5 @@ namespace API.Controllers
             var value = await mediator.Send(new DeleteCategoryCommand() { Id = id });
             return Ok(value);
         }
-
-
     }
 }

@@ -1,4 +1,3 @@
-
 using Application.Services.UserService;
 using AutoMapper;
 using Domain.EntityModels;
@@ -27,4 +26,3 @@ namespace Application.Features.Users.Commands.Update
         }
     }
 }
-

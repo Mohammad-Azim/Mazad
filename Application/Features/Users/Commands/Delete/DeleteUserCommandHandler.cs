@@ -1,5 +1,4 @@
 using Application.Services.UserService;
-using AutoMapper;
 using MediatR;
 
 namespace Application.Features.Users.Commands.Delete

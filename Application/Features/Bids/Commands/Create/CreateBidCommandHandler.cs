@@ -26,7 +26,6 @@ namespace Application.Features.Bids.Commands.Create
 
         public async Task<CreateBidCommandResponse> Handle(CreateBidCommand command, CancellationToken cancellationToken)
         {
-
             var createBidCommandResponse = new CreateBidCommandResponse();
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 

@@ -1,4 +1,3 @@
-
 using Application.Services.UserService;
 using Domain.EntityModels;
 using MediatR;
@@ -9,7 +8,6 @@ namespace Application.Features.Users.Queries.GetWithEvents
     {
         private readonly IUserService _userService;
 
-
         public GetUserByIdQueryHandler(IUserService userService)
         {
             _userService = userService;
@@ -18,7 +16,5 @@ namespace Application.Features.Users.Queries.GetWithEvents
         {
             return await _userService.GetById(request.Id);
         }
-
-
     }
 }

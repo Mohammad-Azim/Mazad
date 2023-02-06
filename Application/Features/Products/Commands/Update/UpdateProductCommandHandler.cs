@@ -1,7 +1,6 @@
 using Application.Features.Products.Commands.Create;
 using Application.Services.ProductService;
 using AutoMapper;
-using Application.Helper.Response;
 using Domain.EntityModels;
 using FluentValidation;
 using MediatR;

@@ -1,5 +1,4 @@
 using Application.Features.Products.Dtos;
-using Domain.EntityModels;
 using MediatR;
 
 namespace Application.Features.Products.Commands.Update

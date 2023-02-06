@@ -1,5 +1,4 @@
 using Application.Services.BidService;
-using AutoMapper;
 using MediatR;
 
 namespace Application.Features.Categories.Commands.Delete
@@ -15,7 +14,6 @@ namespace Application.Features.Categories.Commands.Delete
 
         public async Task<DeleteCategoryCommandResponse> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
-
             var deleteCategoryCommandResponse = new DeleteCategoryCommandResponse();
 
             var result = await _bidService.Delete(request.Id);

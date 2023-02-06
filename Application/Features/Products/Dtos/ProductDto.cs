@@ -1,5 +1,3 @@
-using Domain.EntityModels;
-
 namespace Application.Features.Products.Dtos
 {
     public record ProductDto
@@ -14,7 +12,5 @@ namespace Application.Features.Products.Dtos
         public string Description { get; set; }
         public int OwnerId { get; set; }
         public int CategoryId { get; set; }
-
-
     }
 }

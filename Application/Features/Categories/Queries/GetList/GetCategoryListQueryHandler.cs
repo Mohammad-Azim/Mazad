@@ -1,15 +1,11 @@
-using Application.Services.BidService;
 using Application.Services.CategoryService;
-using Domain.EntityModels;
 using MediatR;
 
 namespace Application.Features.Categories.Queries.GetList
 {
     public class GetCategoryListQueryHandler : IRequestHandler<GetCategoryListQuery, GetListCategoryQueryResponse>
     {
-
         private readonly ICategoryService _categoryService;
-
 
         public GetCategoryListQueryHandler(ICategoryService categoryService)
         {

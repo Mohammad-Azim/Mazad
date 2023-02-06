@@ -1,4 +1,3 @@
-using Application.Features.Categories.Dtos;
 using FluentValidation;
 
 namespace Application.Features.Categories.Commands.Create

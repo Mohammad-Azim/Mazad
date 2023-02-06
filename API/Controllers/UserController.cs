@@ -24,7 +24,6 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-
         [HttpGet]
         public async Task<List<User>> GetUserListAsync()
         {
@@ -64,6 +63,5 @@ namespace API.Controllers
             var value = await _mediator.Send(new DeleteUserCommand() { Id = id });
             return value != 0 ? Ok() : NotFound();
         }
-
     }
 }

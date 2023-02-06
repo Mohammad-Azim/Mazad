@@ -1,5 +1,4 @@
 using Application.Features.Categories.Commands.Create;
-using Application.Features.Products.Commands.Create;
 using Application.Services.CategoryService;
 using AutoMapper;
 using Domain.EntityModels;
@@ -28,7 +27,6 @@ namespace Application.Features.Categories.Commands.Update
 
             var validationResult = await _validator.ValidateAsync(category, cancellationToken);
             var categoryById = await _categoryService.GetById(command.Id);
-
 
             if (categoryById == null)
             {

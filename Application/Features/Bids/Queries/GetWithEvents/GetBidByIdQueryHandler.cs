@@ -1,6 +1,4 @@
-
 using Application.Services.BidService;
-using Domain.EntityModels;
 using MediatR;
 
 namespace Application.Features.Bids.Queries.GetWithEvents

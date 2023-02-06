@@ -1,5 +1,3 @@
-using Domain.EntityModels;
-using MediatR;
 
 namespace Application.Features.Categories.Dtos
 {
