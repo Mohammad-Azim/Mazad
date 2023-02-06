@@ -49,7 +49,7 @@ namespace Application.Helper.Middleware
             return false;
         }
 
-        private async Task ReturnErrorResponse(HttpContext context)
+        private static async Task ReturnErrorResponse(HttpContext context)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

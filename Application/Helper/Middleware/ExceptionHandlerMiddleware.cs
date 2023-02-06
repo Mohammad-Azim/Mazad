@@ -22,13 +22,14 @@ namespace Application.Helper.Middleware
             catch (Exception ex)
             {
                 await ConvertException(httpContext, ex);
+                return; // #??# is return necessary here ? debug it
             }
         }
 
-        private static async Task ConvertException(HttpContext context, Exception ex)
+        private static async Task ConvertException(HttpContext httpContext, Exception ex)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "application/json";
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            httpContext.Response.ContentType = "application/json";
 
             var response = new BaseResponse<string>
             {
@@ -37,7 +38,7 @@ namespace Application.Helper.Middleware
                 Message = ex.Message
             };
             string output = JsonConvert.SerializeObject(response);
-            await context.Response.WriteAsync(output);
+            await httpContext.Response.WriteAsync(output);
         }
     }
 }
