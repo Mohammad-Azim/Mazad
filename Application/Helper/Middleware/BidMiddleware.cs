@@ -35,7 +35,7 @@ namespace Application.Helper.Middleware
                         await ReturnErrorResponse(httpContext);
                         return;
                     }
-                    request.Body.Position = 0;  //rewinding the stream to 0
+                    request.Body.Position = 0;  //rewinding the stream to 0 #??#
                 }
             }
             await _next(httpContext); // calling next middleware

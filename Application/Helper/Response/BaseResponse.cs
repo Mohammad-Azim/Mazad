@@ -1,4 +1,3 @@
-using System.IO;
 using FluentValidation.Results;
 
 namespace Application.Helper.Response
