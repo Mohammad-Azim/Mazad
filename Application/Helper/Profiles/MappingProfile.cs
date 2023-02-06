@@ -19,7 +19,7 @@ namespace Application.Helper.Profiles
         {
             CreateMap<CreateUserCommand, User>().ReverseMap();
             CreateMap<UpdateUserCommand, User>().ReverseMap();
-            CreateMap<UpdateUserCommand, UserDto>().ReverseMap();
+            CreateMap<UpdateUserCommand, UserRegisterDto>().ReverseMap();
 
             CreateMap<CreateProductCommand, Product>().ReverseMap();
             CreateMap<UpdateProductCommand, Product>().ReverseMap();

@@ -42,7 +42,7 @@ namespace Application.Helper.Middleware
         {
             BaseResponse<object> responseObject = JsonConvert.DeserializeObject<BaseResponse<object>>(responseBody);
 
-            httpContext.Response.StatusCode = (int)responseObject.StatusCode;
+            httpContext.Response.StatusCode = responseObject == null ? (int)CodeStatusEnum.NotFound : (int)responseObject.StatusCode;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("user-by-id")]
-        public async Task<ActionResult<User>> UpdateUserAsync([FromBody] UserDto userDto, int id)
+        public async Task<ActionResult<User>> UpdateUserAsync([FromBody] UserRegisterDto userDto, int id)
         {
             UpdateUserCommand user = _mapper.Map<UpdateUserCommand>(userDto);
             user.Id = id;
