@@ -1,3 +1,4 @@
+using Application.Features.Categories.Commands.Create;
 using Application.Features.Categories.Commands.Delete;
 using Application.Features.Categories.Commands.Update;
 using Application.Features.Categories.Dtos;
@@ -6,6 +7,7 @@ using Application.Features.Categories.Queries.GetWithEvents;
 using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -30,7 +32,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("bid-by-id")]
+        [Route("id")]
         public async Task<ActionResult<GetCategoryByIdQueryResponse>> GetCategoryByIdAsync(int id)
         {
             var value = await mediator.Send(new GetCategoryByIdQuery() { Id = id });
@@ -38,14 +40,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> AddCategoryAsync([FromBody] CategoryDto category)
+        public async Task<ActionResult<Category>> AddCategoryAsync([FromBody] CreateCategoryCommand category)
         {
             var value = await mediator.Send(category);
             return value != null ? Ok(value) : BadRequest();
         }
 
         [HttpPut]
-        [Route("bid-by-id")]
+        [Route("id")]
         public async Task<ActionResult<Category>> UpdateCategoryAsync([FromBody] CategoryDto categoryDto, int id)
         {
             UpdateCategoryCommand bid = _mapper.Map<UpdateCategoryCommand>(categoryDto);
@@ -55,8 +57,8 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        [Route("bid-by-id")]
-        public async Task<ActionResult<DeleteCategoryCommandResponse>> DeleteBidAsync(int id)
+        [Route("id")]
+        public async Task<ActionResult<DeleteCategoryCommandResponse>> DeleteCategoryAsync(int id)
         {
             var value = await mediator.Send(new DeleteCategoryCommand() { Id = id });
             return Ok(value);

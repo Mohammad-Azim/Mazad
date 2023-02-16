@@ -40,8 +40,7 @@ namespace Application.Features.Users.Commands.Create
                 user.Admin = false;
                 user.AuthenticatedEmail = false;
 
-                var data = await _userService.Create(user);
-                createUserCommandResponse.Data = data;
+                createUserCommandResponse.Data = await _userService.Create(user);
             }
             return createUserCommandResponse;
         }

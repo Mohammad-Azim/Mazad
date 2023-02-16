@@ -1,22 +1,24 @@
 using Application.Services.BidService;
+using Application.Services.CategoryService;
 using MediatR;
 
 namespace Application.Features.Categories.Commands.Delete
 {
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, DeleteCategoryCommandResponse>
     {
-        private readonly IBidService _bidService;
+        private readonly ICategoryService _categoryService;
 
-        public DeleteCategoryCommandHandler(IBidService ProductService)
+
+        public DeleteCategoryCommandHandler(ICategoryService categoryService)
         {
-            _bidService = ProductService;
+            _categoryService = categoryService;
         }
 
         public async Task<DeleteCategoryCommandResponse> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             var deleteCategoryCommandResponse = new DeleteCategoryCommandResponse();
 
-            var result = await _bidService.Delete(request.Id);
+            var result = await _categoryService.Delete(request.Id);
             if (result == 0)
             {
                 deleteCategoryCommandResponse.NotFoundResponse();

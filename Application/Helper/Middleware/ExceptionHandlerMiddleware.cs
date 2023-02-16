@@ -22,7 +22,7 @@ namespace Application.Helper.Middleware
             catch (Exception ex)
             {
                 await ConvertException(httpContext, ex);
-                return; // #??# is return necessary here ? debug it
+                return;
             }
         }
 

@@ -29,8 +29,7 @@ namespace API.Controllers
             return await mediator.Send(new GetProductListQuery());
         }
 
-        [HttpGet]
-        [Route("product-by-id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductByIdAsync(int id)
         {
             var value = await mediator.Send(new GetProductByIdQuery() { Id = id });
