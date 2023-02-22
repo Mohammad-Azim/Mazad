@@ -1,6 +1,7 @@
 using Application.Features.Bids.Commands.Create;
 using Application.Features.Bids.Commands.Delete;
 using Application.Features.Bids.Commands.Update;
+using Application.Features.Bids.Queries.BidListByProduct;
 using Application.Features.Bids.Queries.GetList;
 using Application.Features.Bids.Queries.GetWithEvents;
 using AutoMapper;
@@ -35,6 +36,14 @@ namespace API.Controllers
         public async Task<ActionResult<GetBidByIdQueryResponse>> GetBidByIdAsync(int id)
         {
             var value = await _mediator.Send(new GetBidByIdQuery() { Id = id });
+            return Ok(value);
+        }
+
+        [HttpGet]
+        [Route("bid-by-product")]
+        public async Task<ActionResult<GetBidByIdQueryResponse>> GetBidByProductIdAsync([FromQuery] int productId)
+        {
+            var value = await _mediator.Send(new GetBidListByProductQuery() { Id = productId });
             return Ok(value);
         }
 

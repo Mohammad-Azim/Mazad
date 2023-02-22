@@ -26,11 +26,11 @@ namespace Infrastructure.Context
             .WithMany(u => u.Products);
 
             modelBuilder.Entity<Bid>()
-            .HasOne(p => p.user)
+            .HasOne(p => p.User)
             .WithMany(u => u.Bids);
 
             modelBuilder.Entity<Bid>()
-            .HasOne(p => p.product)
+            .HasOne(p => p.Product)
             .WithMany(u => u.Bids);
 
 

@@ -8,8 +8,8 @@ namespace Domain.EntityModels
         public int BidPrice { get; set; }
         public DateTime Date { get; set; }
         public int ProductId { get; set; }
-        public Product product { get; set; }
+        public Product Product { get; set; }
         public int UserId { get; set; }
-        public User user { get; set; }
+        public User User { get; set; }
     }
 }
