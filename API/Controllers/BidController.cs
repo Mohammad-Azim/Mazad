@@ -1,3 +1,4 @@
+using API.myHub;
 using Application.Features.Bids.Commands.Create;
 using Application.Features.Bids.Commands.Delete;
 using Application.Features.Bids.Commands.Update;
@@ -8,6 +9,7 @@ using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Controllers
 {
@@ -17,11 +19,14 @@ namespace API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IHubContext<BidHub> _hubContext;
 
-        public BidController(IMediator mediator, IMapper mapper)
+
+        public BidController(IMediator mediator, IMapper mapper, IHubContext<BidHub> hubContext)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -51,6 +56,7 @@ namespace API.Controllers
         public async Task<ActionResult<CreateBidCommandResponse>> AddBidAsync([FromBody] CreateBidCommand bid)
         {
             var value = await _mediator.Send(bid);
+            await _hubContext.Clients.All.SendAsync("BidAdded", bid);
             return Ok(value);
         }
 

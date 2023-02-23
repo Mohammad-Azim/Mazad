@@ -1,3 +1,4 @@
+using API.myHub;
 using Application;
 using Application.Helper.Middleware;
 using Infrastructure.Context;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddApplicationServices();
 
 builder.Services.AddCors(options =>
@@ -13,8 +15,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAllOrigins",
         builder =>
         {
-            builder.WithOrigins("http://localhost:4200").AllowAnyMethod()
-                               .AllowAnyHeader();
+            builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed((host) => true)
+                .AllowCredentials();
         });
 });
 
@@ -22,6 +27,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,13 +45,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
 
 app.UseCors("AllowAllOrigins");
 
-app.UseMiddlewareExtensions();
-
+app.UseRouting();
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<BidHub>("/api/bid-hub");
+});
+
+app.UseWebSockets();
+
+app.UseMiddlewareExtensions();
 
 app.MapControllers();
 
