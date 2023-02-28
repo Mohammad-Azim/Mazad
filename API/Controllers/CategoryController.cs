@@ -7,7 +7,6 @@ using Application.Features.Categories.Queries.GetWithEvents;
 using AutoMapper;
 using Domain.EntityModels;
 using MediatR;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

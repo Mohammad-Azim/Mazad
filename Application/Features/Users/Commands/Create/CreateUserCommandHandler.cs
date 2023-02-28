@@ -22,7 +22,6 @@ namespace Application.Features.Users.Commands.Create
 
         public async Task<CreateUserCommandResponse> Handle(CreateUserCommand command, CancellationToken cancellationToken)
         {
-
             var createUserCommandResponse = new CreateUserCommandResponse();
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (validationResult.Errors.Count > 0)
@@ -31,7 +30,12 @@ namespace Application.Features.Users.Commands.Create
             }
             if (createUserCommandResponse.Success)
             {
+                //User user = command.Mapping(_mapper);
                 User user = _mapper.Map<User>(command);
+
+                //User user = command.Mapping(_mapper);
+
+
 
                 Tuple<string, string> PasswordAndSalt = UserManager.HashPassword(command.Password);
                 user.Password = PasswordAndSalt.Item1;

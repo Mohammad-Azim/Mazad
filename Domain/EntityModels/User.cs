@@ -1,4 +1,5 @@
 using Application.Domain.Common.Entity;
+
 namespace Domain.EntityModels
 {
     public class User : BaseEntity, IEntity

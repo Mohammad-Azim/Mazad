@@ -6,7 +6,6 @@ using Application.Features.Bids.Queries.BidListByProduct;
 using Application.Features.Bids.Queries.GetList;
 using Application.Features.Bids.Queries.GetWithEvents;
 using AutoMapper;
-using Domain.EntityModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;

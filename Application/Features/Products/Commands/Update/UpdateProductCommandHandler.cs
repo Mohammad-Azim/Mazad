@@ -24,7 +24,8 @@ namespace Application.Features.Products.Commands.Update
         {
             var updateProductCommandResponse = new UpdateProductCommandResponse();
             CreateProductCommand product = _mapper.Map<CreateProductCommand>(command);
-
+            Console.WriteLine("######################################3");
+            Console.WriteLine(command.Id.ToString(), "asdfasdfasdfasdf");
             var validationResult = await _validator.ValidateAsync(product, cancellationToken);
             var productById = await _productService.GetById(command.Id);
 
@@ -41,7 +42,7 @@ namespace Application.Features.Products.Commands.Update
             {
                 Product result = _mapper.Map<Product>(command);
                 result.EndTime = result.EndTime.ToUniversalTime();
-                var data = await _productService.Create(result);
+                var data = await _productService.Update(result);
                 updateProductCommandResponse.SuccessResponse(data);
             }
             return updateProductCommandResponse;
