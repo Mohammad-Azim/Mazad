@@ -1,10 +1,11 @@
 using Application.Features.Bids.Dtos;
 using MediatR;
-using Application.Services.BidService;
+
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Infrastructure.Context;
 
 namespace Application.Features.Bids.Commands.Create
 {
@@ -14,15 +15,15 @@ namespace Application.Features.Bids.Commands.Create
     {
         private readonly IValidator<CreateBidCommand> _validator;
 
-        private readonly IBidService _bidService;
+        private readonly ApplicationDbContext _context;
 
         private readonly IMapper _mapper;
 
         public ModelStateDictionary ModelState { get; set; }
 
-        public CreateBidCommandHandler(IBidService bidService, IValidator<CreateBidCommand> validator, IMapper mapper)
+        public CreateBidCommandHandler(ApplicationDbContext context, IValidator<CreateBidCommand> validator, IMapper mapper)
         {
-            _bidService = bidService;
+            _context = context;
             _validator = validator;
             _mapper = mapper;
         }
@@ -40,8 +41,11 @@ namespace Application.Features.Bids.Commands.Create
             {
                 Bid bid = _mapper.Map<Bid>(command);
                 bid.Date = DateTime.UtcNow;
-                var data = await _bidService.Create(bid);
-                createBidCommandResponse.SuccessResponse(data);
+
+                var data = await _context.Bids.AddAsync(bid, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                createBidCommandResponse.SuccessResponse(data.Entity);
             }
             return createBidCommandResponse;
         }

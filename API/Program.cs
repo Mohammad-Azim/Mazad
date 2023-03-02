@@ -24,7 +24,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options =>
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
 );
 
 builder.Services.AddSignalR();
@@ -51,6 +54,8 @@ app.UseCors("AllowAllOrigins");
 app.UseRouting();
 app.UseAuthorization();
 
+app.UseMiddlewareExtensions();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -58,8 +63,6 @@ app.UseEndpoints(endpoints =>
 });
 
 app.UseWebSockets();
-
-app.UseMiddlewareExtensions();
 
 app.MapControllers();
 

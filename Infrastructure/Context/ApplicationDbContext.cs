@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context
 {
-
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-
         public ApplicationDbContext(DbContextOptions options)
         : base(options)
         {
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,7 +31,6 @@ namespace Infrastructure.Context
             modelBuilder.Entity<Bid>()
             .HasOne(p => p.Product)
             .WithMany(u => u.Bids);
-
 
             modelBuilder.Entity<Product>()
             .HasOne(p => p.Category)

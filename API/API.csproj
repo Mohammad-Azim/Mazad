@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.3"/>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0"/>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.3"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.12"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>

@@ -1,5 +1,6 @@
-using Application.Services.BidService;
+using Infrastructure.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Bids.Queries.GetWithEvents
 {
@@ -9,16 +10,16 @@ namespace Application.Features.Bids.Queries.GetWithEvents
     }
     public class GetBidByIdQueryHandler : IRequestHandler<GetBidByIdQuery, GetBidByIdQueryResponse>
     {
-        private readonly IBidService _bidService;
+        private readonly ApplicationDbContext _context;
 
-        public GetBidByIdQueryHandler(IBidService bidService)
+        public GetBidByIdQueryHandler(ApplicationDbContext context)
         {
-            _bidService = bidService;
+            _context = context;
         }
         public async Task<GetBidByIdQueryResponse> Handle(GetBidByIdQuery request, CancellationToken cancellationToken)
         {
             var getBidByIdQueryResponse = new GetBidByIdQueryResponse();
-            var data = await _bidService.GetById(request.Id);
+            var data = await _context.Bids.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             if (data != null)
             {
                 getBidByIdQueryResponse.SuccessResponse(data);

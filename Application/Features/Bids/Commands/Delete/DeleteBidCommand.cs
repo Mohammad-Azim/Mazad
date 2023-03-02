@@ -1,6 +1,6 @@
-using Application.Services.BidService;
+using Infrastructure.Context;
 using MediatR;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Bids.Commands.Delete
 {
@@ -11,26 +11,28 @@ namespace Application.Features.Bids.Commands.Delete
 
     public class DeleteBidCommandHandler : IRequestHandler<DeleteBidCommand, DeleteBidCommandResponse>
     {
-        private readonly IBidService _bidService;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteBidCommandHandler(IBidService ProductService)
+        public DeleteBidCommandHandler(ApplicationDbContext context)
         {
-            _bidService = ProductService;
+            _context = context;
         }
 
         public async Task<DeleteBidCommandResponse> Handle(DeleteBidCommand request, CancellationToken cancellationToken)
         {
             var deleteBidCommandResponse = new DeleteBidCommandResponse();
 
-            var result = await _bidService.Delete(request.Id);
+            var result = await _context.Bids.FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
-            if (result == 0)
+            if (result != null)
+            {
+                _context.Bids.Remove(result);
+                await _context.SaveChangesAsync(cancellationToken);
+                deleteBidCommandResponse.SuccessResponse();
+            }
+            else
             {
                 deleteBidCommandResponse.NotFoundResponse();
-            }
-            if (deleteBidCommandResponse.Success)
-            {
-                deleteBidCommandResponse.SuccessResponse();
             }
             return deleteBidCommandResponse;
         }

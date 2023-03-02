@@ -5,6 +5,8 @@ using Application.Services.CategoryService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
+using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Commands.Update
 {
@@ -15,13 +17,13 @@ namespace Application.Features.Categories.Commands.Update
 
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, UpdateCategoryCommandResponse>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ApplicationDbContext _context;
         private readonly IValidator<CreateCategoryCommand> _validator;
         private readonly IMapper _mapper;
 
-        public UpdateCategoryCommandHandler(ICategoryService categoryService, IValidator<CreateCategoryCommand> validator, IMapper mapper)
+        public UpdateCategoryCommandHandler(ApplicationDbContext context, IValidator<CreateCategoryCommand> validator, IMapper mapper)
         {
-            _categoryService = categoryService;
+            _context = context;
             _validator = validator;
             _mapper = mapper;
         }
@@ -32,7 +34,8 @@ namespace Application.Features.Categories.Commands.Update
             CreateCategoryCommand category = _mapper.Map<CreateCategoryCommand>(command);
 
             var validationResult = await _validator.ValidateAsync(category, cancellationToken);
-            var categoryById = await _categoryService.GetById(command.Id);
+            var categoryById = await _context.Categories.SingleAsync(a => a.Id == command.Id, cancellationToken);
+
 
             if (categoryById == null)
             {
@@ -42,12 +45,11 @@ namespace Application.Features.Categories.Commands.Update
             {
                 updateCategoryCommandResponse.ErrorsResponse(validationResult.Errors);
             }
-
             if (updateCategoryCommandResponse.Success)
             {
-                Category result = _mapper.Map<Category>(command);
-                var data = await _categoryService.Create(result);
-                updateCategoryCommandResponse.SuccessResponse(data);
+                var data = _context.Categories.Update(categoryById);
+                await _context.SaveChangesAsync(cancellationToken);
+                updateCategoryCommandResponse.SuccessResponse(data.Entity);
             }
             return updateCategoryCommandResponse;
         }

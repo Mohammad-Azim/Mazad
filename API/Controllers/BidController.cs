@@ -3,7 +3,6 @@ using Application.Features.Bids.Commands.Create;
 using Application.Features.Bids.Commands.Delete;
 using Application.Features.Bids.Commands.Update;
 using Application.Features.Bids.Queries.BidListByProduct;
-using Application.Features.Bids.Queries.GetList;
 using Application.Features.Bids.Queries.GetWithEvents;
 using AutoMapper;
 using MediatR;
@@ -26,13 +25,6 @@ namespace API.Controllers
             _mediator = mediator;
             _mapper = mapper;
             _hubContext = hubContext;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<GetListBidQueryResponse>> GetBidListAsync()
-        {
-            var value = await _mediator.Send(new GetBidListQuery());
-            return Ok(value);
         }
 
         [HttpGet]

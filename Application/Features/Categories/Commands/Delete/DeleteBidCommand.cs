@@ -1,5 +1,6 @@
-using Application.Services.CategoryService;
+using Infrastructure.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Commands.Delete
 {
@@ -10,25 +11,27 @@ namespace Application.Features.Categories.Commands.Delete
 
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, DeleteCategoryCommandResponse>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteCategoryCommandHandler(ICategoryService categoryService)
+        public DeleteCategoryCommandHandler(ApplicationDbContext context)
         {
-            _categoryService = categoryService;
+            _context = context;
         }
 
         public async Task<DeleteCategoryCommandResponse> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             var deleteCategoryCommandResponse = new DeleteCategoryCommandResponse();
+            var category = await _context.Categories.SingleAsync(a => a.Id == request.Id, cancellationToken);
 
-            var result = await _categoryService.Delete(request.Id);
-            if (result == 0)
+            if (category != null)
+            {
+                var result = _context.Categories.Remove(category);
+                await _context.SaveChangesAsync(cancellationToken);
+                deleteCategoryCommandResponse.SuccessResponse();
+            }
+            else
             {
                 deleteCategoryCommandResponse.NotFoundResponse();
-            }
-            if (deleteCategoryCommandResponse.Success)
-            {
-                deleteCategoryCommandResponse.SuccessResponse();
             }
             return deleteCategoryCommandResponse;
         }

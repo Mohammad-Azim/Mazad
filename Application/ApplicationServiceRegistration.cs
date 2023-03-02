@@ -1,6 +1,6 @@
 using Application.Features.Bids.Commands.Create;
 using Application.Features.Products.Commands.Create;
-using Application.Services.BidService;
+
 using Application.Services.CategoryService;
 using Application.Services.ProductService;
 using Application.Services.UserService;
@@ -8,6 +8,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Application
 {
@@ -20,11 +21,13 @@ namespace Application
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IBidService, BidService>();
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddValidatorsFromAssemblyContaining<CreateProductCommandValidator>();
             services.AddValidatorsFromAssemblyContaining<CreateBidCommandValidation>();
+
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             return services;
         }

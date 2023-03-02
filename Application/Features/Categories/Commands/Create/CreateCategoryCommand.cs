@@ -4,6 +4,7 @@ using Application.Services.CategoryService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
+using Infrastructure.Context;
 
 namespace Application.Features.Categories.Commands.Create
 {
@@ -11,13 +12,13 @@ namespace Application.Features.Categories.Commands.Create
 
     public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CreateCategoryCommandResponse>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ApplicationDbContext _context;
         private readonly IValidator<CreateCategoryCommand> _validator;
         private readonly IMapper _mapper;
 
-        public CreateCategoryCommandHandler(ICategoryService categoryService, IMapper mapper, IValidator<CreateCategoryCommand> validator)
+        public CreateCategoryCommandHandler(ApplicationDbContext context, IMapper mapper, IValidator<CreateCategoryCommand> validator)
         {
-            _categoryService = categoryService;
+            _context = context;
             _validator = validator;
             _mapper = mapper;
         }
@@ -35,8 +36,10 @@ namespace Application.Features.Categories.Commands.Create
             if (createCategoryCommandResponse.Success)
             {
                 Category category = _mapper.Map<Category>(command);
-                var data = await _categoryService.Create(category);
-                createCategoryCommandResponse.SuccessResponse(data);
+                var data = await _context.Categories.AddAsync(category, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                createCategoryCommandResponse.SuccessResponse(data.Entity);
             }
             return createCategoryCommandResponse;
         }

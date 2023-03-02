@@ -12,7 +12,7 @@ namespace Domain.EntityModels
         public string LastName { get; set; }
         public bool Admin { get; set; }
         public bool AuthenticatedEmail { get; set; }
-        public List<Product> Products { get; set; }
-        public List<Bid> Bids { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Bid> Bids { get; set; }
     }
 }

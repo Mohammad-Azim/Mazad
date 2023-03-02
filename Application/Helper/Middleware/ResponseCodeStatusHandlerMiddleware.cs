@@ -28,7 +28,7 @@ namespace Application.Helper.Middleware
                     string responseBody = new StreamReader(memStream).ReadToEnd();
                     ConvertResponseCode(httpContext, responseBody);
 
-                    memStream.Position = 0;
+                    memStream.Position = 0; // #??#
                     await memStream.CopyToAsync(originalBody);
                 }
             }

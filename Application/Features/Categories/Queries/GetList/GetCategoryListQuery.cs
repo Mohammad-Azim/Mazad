@@ -1,5 +1,7 @@
 using Application.Services.CategoryService;
+using Infrastructure.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Queries.GetList
 {
@@ -7,16 +9,19 @@ namespace Application.Features.Categories.Queries.GetList
 
     public class GetCategoryListQueryHandler : IRequestHandler<GetCategoryListQuery, GetListCategoryQueryResponse>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ApplicationDbContext _context;
 
-        public GetCategoryListQueryHandler(ICategoryService categoryService)
+        public GetCategoryListQueryHandler(ApplicationDbContext context)
         {
-            _categoryService = categoryService;
+            _context = context;
         }
         public async Task<GetListCategoryQueryResponse> Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
             var getListCategoryQueryResponse = new GetListCategoryQueryResponse();
-            var data = await _categoryService.GetAll();
+
+            //var data = await _categoryService.GetAll();
+            var data = await _context.Categories.AsNoTracking().AsQueryable().ToListAsync(cancellationToken);
+
             getListCategoryQueryResponse.SuccessResponse(data);
             return getListCategoryQueryResponse;
         }
