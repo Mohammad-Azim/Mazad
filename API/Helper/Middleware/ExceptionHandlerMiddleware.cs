@@ -1,9 +1,8 @@
 using System.Net;
 using Application.Helper.Response;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Application.Helper.Middleware
+namespace API.Helper.Middleware
 {
     public class ExceptionHandlerMiddleware
     {

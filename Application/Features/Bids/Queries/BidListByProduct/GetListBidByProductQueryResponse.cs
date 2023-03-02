@@ -4,5 +4,5 @@ using Domain.EntityModels;
 
 namespace Application.Features.Bids.Queries.BidListByProduct
 {
-    public class GetListBidByProductQueryResponse : BaseResponse<List<BidDto>> { }
+    public class GetListBidByProductQueryResponse : BaseResponse<ICollection<BidDto>> { }
 }

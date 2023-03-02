@@ -1,8 +1,7 @@
 using Application.Helper.Response;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Application.Helper.Middleware
+namespace API.Helper.Middleware
 {
     public class ResponseCodeStatusHandlerMiddleware
     {
@@ -40,7 +39,7 @@ namespace Application.Helper.Middleware
 
         private static void ConvertResponseCode(HttpContext httpContext, string responseBody)
         {
-            BaseResponse<object> responseObject = JsonConvert.DeserializeObject<BaseResponse<object>>(responseBody);
+            var responseObject = JsonConvert.DeserializeObject<BaseResponse<object>>(responseBody);
 
             httpContext.Response.StatusCode = responseObject == null ? (int)CodeStatusEnum.NotFound : (int)responseObject.StatusCode;
         }
