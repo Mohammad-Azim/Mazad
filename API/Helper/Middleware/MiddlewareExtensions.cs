@@ -8,7 +8,7 @@ namespace API.Helper.Middleware
             builder.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/bid-hub"), appBuilder =>
             {
                 // builder.UseMiddleware<CorsMiddleware>();
-                builder.UseMiddleware<ExceptionHandlerMiddleware>();
+                //builder.UseMiddleware<ExceptionHandlerMiddleware>();
                 appBuilder.UseMiddleware<ResponseCodeStatusHandlerMiddleware>();
             });
             return builder;

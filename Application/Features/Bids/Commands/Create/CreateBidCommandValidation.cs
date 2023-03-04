@@ -3,6 +3,7 @@ using Application.Services.ProductService;
 using FluentValidation;
 using Application.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Application.Features.Bids.Commands.Create
 {
@@ -30,7 +31,6 @@ namespace Application.Features.Bids.Commands.Create
 
         private async Task<bool> IsBidNotFromOwner(CreateBidCommand b, CancellationToken cancellationToken)
         {
-            //var product = await _productService.GetById(b.ProductId);
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == b.ProductId, cancellationToken);
             if (product == null)
             {
@@ -41,9 +41,13 @@ namespace Application.Features.Bids.Commands.Create
 
         private async Task<bool> IsLastBidIsLargest(CreateBidCommand b, CancellationToken cancellationToken)
         {
-            var largestBidPrice = await _context.Bids.SingleAsync(x => x.Id == b.ProductId, cancellationToken);
+            var largestBidPrice = await _context.Bids
+                .Where(x => x.ProductId == b.ProductId)
+                .OrderByDescending(x => x.BidPrice)
+                .Select(x => x.BidPrice)
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return b.BidPrice > largestBidPrice.BidPrice;
+            return b.BidPrice > largestBidPrice;
         }
         private async Task<bool> IsLargerThanStartingPrice(CreateBidCommand b, CancellationToken cancellationToken)
         {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace API.myHub
+namespace Application.Helper.myHub
 {
     public class BidHub : Hub { }
 }

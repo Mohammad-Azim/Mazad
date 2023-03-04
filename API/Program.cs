@@ -1,8 +1,8 @@
-using API.myHub;
 using Application;
 using API.Helper.Middleware;
 using Application.Context;
 using Microsoft.EntityFrameworkCore;
+using Application.Helper.myHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +24,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options =>
-    {
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-    }
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 builder.Services.AddSignalR();
@@ -58,7 +55,7 @@ app.UseEndpoints(endpoints =>
 
     endpoints.MapHub<BidHub>("/api/bid-hub");
 });
+app.UseWebSockets();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.Run();

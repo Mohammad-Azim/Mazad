@@ -6,6 +6,8 @@ using Domain.EntityModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Application.Context;
+using Microsoft.AspNetCore.SignalR;
+using Application.Helper.myHub;
 
 namespace Application.Features.Bids.Commands.Create
 {
@@ -17,15 +19,19 @@ namespace Application.Features.Bids.Commands.Create
 
         private readonly ApplicationDbContext _context;
 
+        private readonly IHubContext<BidHub> _hubContext;
+
         private readonly IMapper _mapper;
 
         public ModelStateDictionary ModelState { get; set; }
 
-        public CreateBidCommandHandler(ApplicationDbContext context, IValidator<CreateBidCommand> validator, IMapper mapper)
+        public CreateBidCommandHandler(ApplicationDbContext context, IValidator<CreateBidCommand> validator, IHubContext<BidHub> hubContext, IMapper mapper)
         {
             _context = context;
             _validator = validator;
             _mapper = mapper;
+            _hubContext = hubContext;
+
         }
 
         public async Task<CreateBidCommandResponse> Handle(CreateBidCommand command, CancellationToken cancellationToken)
@@ -46,6 +52,7 @@ namespace Application.Features.Bids.Commands.Create
                 await _context.SaveChangesAsync(cancellationToken);
 
                 createBidCommandResponse.SuccessResponse(data.Entity);
+                await _hubContext.Clients.All.SendAsync("BidAdded", command, cancellationToken);
             }
             return createBidCommandResponse;
         }

@@ -1,4 +1,3 @@
-using API.myHub;
 using Application.Features.Bids.Commands.Create;
 using Application.Features.Bids.Commands.Delete;
 using Application.Features.Bids.Commands.Update;
@@ -17,14 +16,12 @@ namespace API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly IHubContext<BidHub> _hubContext;
 
 
-        public BidController(IMediator mediator, IMapper mapper, IHubContext<BidHub> hubContext)
+        public BidController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
-            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -47,7 +44,6 @@ namespace API.Controllers
         public async Task<ActionResult<CreateBidCommandResponse>> AddBidAsync([FromBody] CreateBidCommand bid, CancellationToken cancellationToken)
         {
             var value = await _mediator.Send(bid, cancellationToken);
-            await _hubContext.Clients.All.SendAsync("BidAdded", bid, cancellationToken);
             return Ok(value);
         }
 
