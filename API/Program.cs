@@ -1,7 +1,7 @@
 using API.myHub;
 using Application;
 using API.Helper.Middleware;
-using Infrastructure.Context;
+using Application.Context;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +37,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -46,24 +47,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseCors("AllowAllOrigins");
-
 app.UseRouting();
+app.UseCors("AllowAllOrigins");
 app.UseAuthorization();
-
-app.UseMiddlewareExtensions();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+    app.UseMiddlewareExtensions();
+
     endpoints.MapHub<BidHub>("/api/bid-hub");
 });
 
-app.UseWebSockets();
-
-app.MapControllers();
-
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.Run();

@@ -4,7 +4,7 @@ using Application.Services.CategoryService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
-using Infrastructure.Context;
+using Application.Context;
 
 namespace Application.Features.Categories.Commands.Create
 {

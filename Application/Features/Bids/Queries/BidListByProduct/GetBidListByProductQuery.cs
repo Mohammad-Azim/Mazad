@@ -2,7 +2,7 @@ using Application.Features.Bids.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.EntityModels;
-using Infrastructure.Context;
+using Application.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

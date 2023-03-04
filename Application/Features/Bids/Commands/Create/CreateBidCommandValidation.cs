@@ -1,7 +1,7 @@
 
 using Application.Services.ProductService;
 using FluentValidation;
-using Infrastructure.Context;
+using Application.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Bids.Commands.Create

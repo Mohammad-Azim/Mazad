@@ -5,7 +5,7 @@ using Application.Services.CategoryService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
-using Infrastructure.Context;
+using Application.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Commands.Update

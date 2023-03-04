@@ -1,5 +1,5 @@
 using Domain.EntityModels;
-using Infrastructure.Context;
+using Application.Context;
 
 namespace Application.Services.ProductService
 {

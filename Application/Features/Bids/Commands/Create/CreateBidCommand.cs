@@ -5,7 +5,7 @@ using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Infrastructure.Context;
+using Application.Context;
 
 namespace Application.Features.Bids.Commands.Create
 {

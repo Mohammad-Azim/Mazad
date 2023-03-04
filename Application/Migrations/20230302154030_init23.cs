@@ -4,9 +4,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Application.Migrations
 {
-    public partial class init : Migration
+    public partial class init23 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,9 +32,12 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Email = table.Column<string>(type: "text", nullable: true),
                     Password = table.Column<string>(type: "text", nullable: true),
+                    Password_Salts = table.Column<string>(type: "text", nullable: true),
                     Image = table.Column<string>(type: "text", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true)
+                    LastName = table.Column<string>(type: "text", nullable: true),
+                    Admin = table.Column<bool>(type: "boolean", nullable: false),
+                    AuthenticatedEmail = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

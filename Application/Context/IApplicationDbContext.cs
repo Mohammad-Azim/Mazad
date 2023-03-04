@@ -2,7 +2,7 @@
 using Domain.EntityModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Context
+namespace Application.Context
 {
     public interface IApplicationDbContext
     {

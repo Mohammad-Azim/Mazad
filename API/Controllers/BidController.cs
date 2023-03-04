@@ -29,43 +29,43 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("bid-by-id")]
-        public async Task<ActionResult<GetBidByIdQueryResponse>> GetBidByIdAsync(int id)
+        public async Task<ActionResult<GetBidByIdQueryResponse>> GetBidByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var value = await _mediator.Send(new GetBidByIdQuery() { Id = id });
+            var value = await _mediator.Send(new GetBidByIdQuery() { Id = id }, cancellationToken);
             return Ok(value);
         }
 
         [HttpGet]
         [Route("bid-by-product")]
-        public async Task<ActionResult<GetBidByIdQueryResponse>> GetBidByProductIdAsync([FromQuery] int productId)
+        public async Task<ActionResult<GetBidByIdQueryResponse>> GetBidByProductIdAsync([FromQuery] int productId, CancellationToken cancellationToken)
         {
-            var value = await _mediator.Send(new GetBidListByProductQuery() { Id = productId });
+            var value = await _mediator.Send(new GetBidListByProductQuery() { Id = productId }, cancellationToken);
             return Ok(value);
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateBidCommandResponse>> AddBidAsync([FromBody] CreateBidCommand bid)
+        public async Task<ActionResult<CreateBidCommandResponse>> AddBidAsync([FromBody] CreateBidCommand bid, CancellationToken cancellationToken)
         {
-            var value = await _mediator.Send(bid);
-            await _hubContext.Clients.All.SendAsync("BidAdded", bid);
+            var value = await _mediator.Send(bid, cancellationToken);
+            await _hubContext.Clients.All.SendAsync("BidAdded", bid, cancellationToken);
             return Ok(value);
         }
 
         [HttpPut]
         [Route("bid-by-id")]
-        public async Task<ActionResult<UpdateBidCommandResponse>> UpdateProductAsync([FromBody] CreateBidCommand bidDto, int id)
+        public async Task<ActionResult<UpdateBidCommandResponse>> UpdateProductAsync([FromBody] CreateBidCommand bidDto, int id, CancellationToken cancellationToken)
         {
             UpdateBidCommand bid = _mapper.Map<UpdateBidCommand>(bidDto);
             bid.Id = id;
-            var value = await _mediator.Send(bid);
+            var value = await _mediator.Send(bid, cancellationToken);
             return Ok(value);
         }
 
         [HttpDelete]
         [Route("bid-by-id")]
-        public async Task<ActionResult<DeleteBidCommandResponse>> DeleteBidAsync(int id)
+        public async Task<ActionResult<DeleteBidCommandResponse>> DeleteBidAsync(int id, CancellationToken cancellationToken)
         {
-            var value = await _mediator.Send(new DeleteBidCommand() { Id = id });
+            var value = await _mediator.Send(new DeleteBidCommand() { Id = id }, cancellationToken);
             return Ok(value);
         }
     }

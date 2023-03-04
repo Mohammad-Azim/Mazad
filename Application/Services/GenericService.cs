@@ -1,6 +1,6 @@
 
 using Application.Domain.Common.Entity;
-using Infrastructure.Context;
+using Application.Context;
 
 using Microsoft.EntityFrameworkCore;
 

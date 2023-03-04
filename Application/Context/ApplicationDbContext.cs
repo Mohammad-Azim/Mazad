@@ -1,14 +1,13 @@
 using Domain.EntityModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Context
+namespace Application.Context
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions options)
         : base(options)
         {
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -20,21 +19,8 @@ namespace Infrastructure.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Product>()
-            .HasOne(p => p.Owner)
-            .WithMany(u => u.Products);
-
-            modelBuilder.Entity<Bid>()
-            .HasOne(p => p.User)
-            .WithMany(u => u.Bids);
-
-            modelBuilder.Entity<Bid>()
-            .HasOne(p => p.Product)
-            .WithMany(u => u.Bids);
-
-            modelBuilder.Entity<Product>()
-            .HasOne(p => p.Category)
-            .WithMany(c => c.Products);
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new BidConfiguration());
         }
 
         public DbSet<User> Users { get; set; }
