@@ -1,5 +1,6 @@
-using Application.Services.ProductService;
+using Application.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Queries.GetWithEvents
 {
@@ -10,17 +11,17 @@ namespace Application.Features.Products.Queries.GetWithEvents
 
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, GetProductByIdQueryResponse>
     {
-        private readonly IProductService _productService;
+        private readonly ApplicationDbContext _context;
 
-        public GetProductByIdQueryHandler(IProductService ProductService)
+        public GetProductByIdQueryHandler(ApplicationDbContext context)
         {
-            _productService = ProductService;
+            _context = context;
         }
         public async Task<GetProductByIdQueryResponse> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             var getProductByIdQueryResponse = new GetProductByIdQueryResponse();
 
-            var data = await _productService.GetById(request.Id);
+            var data = await _context.Products.SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
             if (data != null)
             {
                 getProductByIdQueryResponse.SuccessResponse(data);

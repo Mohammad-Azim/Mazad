@@ -3,9 +3,9 @@ using Application.Helper.Profiles;
 using Domain.EntityModels;
 using MediatR;
 using Application.Helper.CustomIdentity;
-using Application.Services.UserService;
 using AutoMapper;
 using FluentValidation;
+using Application.Context;
 
 namespace Application.Features.Users.Commands.Create
 {
@@ -14,12 +14,12 @@ namespace Application.Features.Users.Commands.Create
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResponse>
     {
         private readonly IValidator<CreateUserCommand> _validator;
-        private readonly IUserService _userService;
+        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public CreateUserCommandHandler(IUserService userService, IValidator<CreateUserCommand> validator, IMapper mapper)
+        public CreateUserCommandHandler(ApplicationDbContext context, IValidator<CreateUserCommand> validator, IMapper mapper)
         {
-            _userService = userService;
+            _context = context;
             _validator = validator;
             _mapper = mapper;
         }
@@ -34,12 +34,7 @@ namespace Application.Features.Users.Commands.Create
             }
             if (createUserCommandResponse.Success)
             {
-                //User user = command.Mapping(_mapper);
                 User user = _mapper.Map<User>(command);
-
-                //User user = command.Mapping(_mapper);
-
-
 
                 Tuple<string, string> PasswordAndSalt = UserManager.HashPassword(command.Password);
                 user.Password = PasswordAndSalt.Item1;
@@ -48,7 +43,8 @@ namespace Application.Features.Users.Commands.Create
                 user.Admin = false;
                 user.AuthenticatedEmail = false;
 
-                createUserCommandResponse.Data = await _userService.Create(user);
+                await _context.Users.AddAsync(user, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
             }
             return createUserCommandResponse;
         }

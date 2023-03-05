@@ -2,9 +2,9 @@ using Application.Features.Users.Dtos;
 using Application.Helper.Profiles;
 using Domain.EntityModels;
 using MediatR;
-using Application.Services.UserService;
 using AutoMapper;
-
+using Application.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands.Update
 {
@@ -15,21 +15,25 @@ namespace Application.Features.Users.Commands.Update
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
     {
-        private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
 
-        public UpdateUserCommandHandler(IUserService userService, IMapper mapper)
+        public UpdateUserCommandHandler(IMapper mapper, ApplicationDbContext context)
         {
-            _userService = userService;
+            _context = context;
             _mapper = mapper;
         }
 
         public async Task<User> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
         {
             User user = _mapper.Map<User>(command);
-            var value = await _userService.GetById(user.Id);
+            var value = await _context.Users.SingleOrDefaultAsync(u => u.Id == user.Id, cancellationToken);
             if (value != null)
-                return await _userService.Update(user);
+            {
+                var data = _context.Users.Update(user);
+                await _context.SaveChangesAsync(cancellationToken);
+                return data.Entity;
+            }
             return null;
         }
     }

@@ -1,5 +1,6 @@
-using Application.Services.ProductService;
+using Application.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Commands.Delete
 {
@@ -9,24 +10,26 @@ namespace Application.Features.Products.Commands.Delete
     }
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, DeleteProductCommandResponse>
     {
-        private readonly IProductService _productService;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteProductCommandHandler(IProductService ProductService)
+        public DeleteProductCommandHandler(ApplicationDbContext context)
         {
-            _productService = ProductService;
+            _context = context;
         }
 
         public async Task<DeleteProductCommandResponse> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
             var deleteProductCommandResponse = new DeleteProductCommandResponse();
 
-            var result = await _productService.Delete(request.Id);
-            if (result == 0)
+            var result = await _context.Products.SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+            if (result == null)
             {
                 deleteProductCommandResponse.NotFoundResponse();
             }
             if (deleteProductCommandResponse.Success)
             {
+                _context.Products.Remove(result);
+                await _context.SaveChangesAsync(cancellationToken);
                 deleteProductCommandResponse.SuccessResponse();
             }
             return deleteProductCommandResponse;

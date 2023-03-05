@@ -1,10 +1,10 @@
 using Application.Features.Products.Dtos;
 using Application.Helper.Profiles;
 using MediatR;
-using Application.Services.ProductService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
+using Application.Context;
 
 namespace Application.Features.Products.Commands.Create
 {
@@ -13,13 +13,13 @@ namespace Application.Features.Products.Commands.Create
 
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, CreateProductCommandResponse>
     {
-        private readonly IProductService _productService;
+        private readonly ApplicationDbContext _context;
         private readonly IValidator<CreateProductCommand> _validator;
         private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IProductService productService, IValidator<CreateProductCommand> validator, IMapper mapper)
+        public CreateProductCommandHandler(ApplicationDbContext context, IValidator<CreateProductCommand> validator, IMapper mapper)
         {
-            _productService = productService;
+            _context = context;
             _validator = validator;
             _mapper = mapper;
         }
@@ -40,9 +40,9 @@ namespace Application.Features.Products.Commands.Create
             {
                 Product product = _mapper.Map<Product>(command);
                 product.EndTime = product.EndTime.ToUniversalTime();
-                var data = await _productService.Create(product);
-                createProductCommandResponse.SuccessResponse(data);
-                // #??# createProductCommandResponse.message && try catch 
+                await _context.Products.AddAsync(product, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+                createProductCommandResponse.SuccessResponse(product);
             }
             return createProductCommandResponse;
         }

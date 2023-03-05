@@ -1,5 +1,6 @@
-using Application.Services.CategoryService;
+using Application.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Queries.GetWithEvents
 {
@@ -10,17 +11,17 @@ namespace Application.Features.Categories.Queries.GetWithEvents
 
     public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, GetCategoryByIdQueryResponse>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ApplicationDbContext _context;
 
-        public GetCategoryByIdQueryHandler(ICategoryService categoryService)
+        public GetCategoryByIdQueryHandler(ApplicationDbContext context)
         {
-            _categoryService = categoryService;
+            _context = context;
         }
         public async Task<GetCategoryByIdQueryResponse> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             var getCategoryByIdQueryResponse = new GetCategoryByIdQueryResponse();
 
-            var data = await _categoryService.GetById(request.Id);
+            var data = await _context.Categories.SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
             if (data != null)
             {
                 getCategoryByIdQueryResponse.SuccessResponse(data);

@@ -1,18 +1,16 @@
-using Application.Services.CategoryService;
-using Application.Services.UserService;
+using Application.Context;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Commands.Create
 {
     public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
     {
-        private readonly IUserService _userService;
-        private readonly ICategoryService _categoryService;
+        private readonly ApplicationDbContext _context;
 
-        public CreateProductCommandValidator(IUserService userService, ICategoryService categoryService)
+        public CreateProductCommandValidator(ApplicationDbContext context)
         {
-            _userService = userService;
-            _categoryService = categoryService;
+            _context = context;
 
             RuleFor(s => s.Name).NotNull().NotEmpty().WithMessage("Please Add Name To the Product");
 
@@ -35,17 +33,16 @@ namespace Application.Features.Products.Commands.Create
         {
             return DateTime.UtcNow.AddHours(20) <= time;
         }
-        private async Task<bool> IsUserExist(int id, CancellationToken token)
+        private async Task<bool> IsUserExist(int id, CancellationToken cancellationToken)
         {
-            var user = await _userService.GetById(id);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
             return user != null;
         }
 
-        private async Task<bool> IsCategoryExist(int id, CancellationToken token)
+        private async Task<bool> IsCategoryExist(int id, CancellationToken cancellationToken)
         {
-            var category = await _categoryService.GetById(id);
+            var category = await _context.Categories.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
             return category != null;
         }
-        // #??# can i make it one method ( IsUserExist +   IsCategoryExist)
     }
 }

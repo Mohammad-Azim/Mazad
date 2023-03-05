@@ -1,5 +1,6 @@
-using Application.Services.ProductService;
+using Application.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Queries.GetList
 {
@@ -7,16 +8,16 @@ namespace Application.Features.Products.Queries.GetList
 
     public class GetProductListQueryHandler : IRequestHandler<GetProductListQuery, GetListProductQueryResponse>
     {
-        private readonly IProductService _productService;
+        private readonly ApplicationDbContext _context;
 
-        public GetProductListQueryHandler(IProductService productService)
+        public GetProductListQueryHandler(ApplicationDbContext context)
         {
-            _productService = productService;
+            _context = context;
         }
         public async Task<GetListProductQueryResponse> Handle(GetProductListQuery request, CancellationToken cancellationToken)
         {
             var getListProductQueryResponse = new GetListProductQueryResponse();
-            var data = await _productService.GetAll();
+            var data = await _context.Products.AsNoTracking().ToListAsync(cancellationToken);
             getListProductQueryResponse.SuccessResponse(data);
             return getListProductQueryResponse;
         }

@@ -21,7 +21,7 @@ namespace Application.Features.Categories.Commands.Delete
         public async Task<DeleteCategoryCommandResponse> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             var deleteCategoryCommandResponse = new DeleteCategoryCommandResponse();
-            var category = await _context.Categories.SingleAsync(a => a.Id == request.Id, cancellationToken);
+            var category = await _context.Categories.SingleOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
             if (category != null)
             {

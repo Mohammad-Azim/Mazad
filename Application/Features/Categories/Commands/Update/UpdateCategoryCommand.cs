@@ -1,9 +1,7 @@
 using Application.Features.Categories.Dtos;
 using MediatR;
 using Application.Features.Categories.Commands.Create;
-using Application.Services.CategoryService;
 using AutoMapper;
-using Domain.EntityModels;
 using FluentValidation;
 using Application.Context;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +32,7 @@ namespace Application.Features.Categories.Commands.Update
             CreateCategoryCommand category = _mapper.Map<CreateCategoryCommand>(command);
 
             var validationResult = await _validator.ValidateAsync(category, cancellationToken);
-            var categoryById = await _context.Categories.SingleAsync(a => a.Id == command.Id, cancellationToken);
+            var categoryById = await _context.Categories.SingleOrDefaultAsync(a => a.Id == command.Id, cancellationToken);
 
 
             if (categoryById == null)

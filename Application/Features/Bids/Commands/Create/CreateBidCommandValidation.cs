@@ -1,9 +1,6 @@
-
-using Application.Services.ProductService;
 using FluentValidation;
 using Application.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Application.Features.Bids.Commands.Create
 {
@@ -51,7 +48,7 @@ namespace Application.Features.Bids.Commands.Create
         }
         private async Task<bool> IsLargerThanStartingPrice(CreateBidCommand b, CancellationToken cancellationToken)
         {
-            var startingPrice = (await _context.Products.SingleAsync(x => x.Id == b.ProductId, cancellationToken)).StartingPrice;
+            var startingPrice = (await _context.Products.SingleOrDefaultAsync(x => x.Id == b.ProductId, cancellationToken)).StartingPrice;
             return b.BidPrice > startingPrice;
         }
     }

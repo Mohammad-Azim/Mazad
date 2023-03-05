@@ -1,15 +1,16 @@
 using System.Data;
-using Application.Services.UserService;
+using Application.Context;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands.Create
 {
     public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     {
-        private readonly IUserService _userService;
-        public CreateUserCommandValidator(IUserService userService)
+        private readonly ApplicationDbContext _context;
+        public CreateUserCommandValidator(ApplicationDbContext context)
         {
-            _userService = userService;
+            _context = context;
 
             RuleFor(u => u.Password).NotNull().NotEmpty().MinimumLength(8).WithMessage("Password Should Be At Least 8 Character");
             RuleFor(u => u.Password).NotNull().NotEmpty().Equal(u => u.ConfirmPassword).WithMessage("Password And Confirm Password Should Be The Same");
@@ -21,9 +22,10 @@ namespace Application.Features.Users.Commands.Create
                 .WithMessage("Email Is Already Used");
         }
 
-        private async Task<bool> EmailNotExist(string emailAddress, CancellationToken token)
+        private async Task<bool> EmailNotExist(string emailAddress, CancellationToken cancellationToken)
         {
-            return !await _userService.EmailExist(emailAddress);
+            var user = await _context.Users.AsNoTracking().Where(x => x.Email == emailAddress).FirstOrDefaultAsync(cancellationToken);
+            return user != null;
         }
     }
 }

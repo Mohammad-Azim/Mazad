@@ -1,6 +1,7 @@
-using Application.Services.UserService;
+using Application.Context;
 using Domain.EntityModels;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Queries.GetWithEvents
 {
@@ -11,15 +12,15 @@ namespace Application.Features.Users.Queries.GetWithEvents
 
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
     {
-        private readonly IUserService _userService;
+        private readonly ApplicationDbContext _context;
 
-        public GetUserByIdQueryHandler(IUserService userService)
+        public GetUserByIdQueryHandler(ApplicationDbContext context)
         {
-            _userService = userService;
+            _context = context;
         }
         public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _userService.GetById(request.Id);
+            return await _context.Users.SingleOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
         }
     }
 }

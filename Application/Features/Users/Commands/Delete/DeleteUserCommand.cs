@@ -1,5 +1,6 @@
-using Application.Services.UserService;
+using Application.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands.Delete
 {
@@ -9,16 +10,23 @@ namespace Application.Features.Users.Commands.Delete
     }
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, int>
     {
-        private readonly IUserService _userService;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteUserCommandHandler(IUserService userService)
+        public DeleteUserCommandHandler(ApplicationDbContext context)
         {
-            _userService = userService;
+            _context = context;
         }
 
         public async Task<int> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            return await _userService.Delete(request.Id);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                return await _context.SaveChangesAsync(cancellationToken);
+            }
+            return 0; // #??#!!
         }
     }
 }

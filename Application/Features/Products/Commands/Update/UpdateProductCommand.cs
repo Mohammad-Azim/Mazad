@@ -2,10 +2,11 @@ using Application.Features.Products.Dtos;
 using Application.Helper.Profiles;
 using MediatR;
 using Application.Features.Products.Commands.Create;
-using Application.Services.ProductService;
 using AutoMapper;
 using Domain.EntityModels;
 using FluentValidation;
+using Application.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Commands.Update
 {
@@ -15,13 +16,13 @@ namespace Application.Features.Products.Commands.Update
     }
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>
     {
-        private readonly IProductService _productService;
+        private readonly ApplicationDbContext _context;
         private readonly IValidator<CreateProductCommand> _validator;
         private readonly IMapper _mapper;
 
-        public UpdateProductCommandHandler(IProductService productService, IValidator<CreateProductCommand> validator, IMapper mapper)
+        public UpdateProductCommandHandler(ApplicationDbContext context, IValidator<CreateProductCommand> validator, IMapper mapper)
         {
-            _productService = productService;
+            _context = context;
             _validator = validator;
             _mapper = mapper;
         }
@@ -31,7 +32,7 @@ namespace Application.Features.Products.Commands.Update
             var updateProductCommandResponse = new UpdateProductCommandResponse();
             CreateProductCommand product = _mapper.Map<CreateProductCommand>(command);
             var validationResult = await _validator.ValidateAsync(product, cancellationToken);
-            var productById = await _productService.GetById(command.Id);
+            var productById = await _context.Products.SingleOrDefaultAsync(p => p.Id == command.Id, cancellationToken);
 
             if (productById == null)
             {
@@ -46,8 +47,9 @@ namespace Application.Features.Products.Commands.Update
             {
                 Product result = _mapper.Map<Product>(command);
                 result.EndTime = result.EndTime.ToUniversalTime();
-                var data = await _productService.Update(result);
-                updateProductCommandResponse.SuccessResponse(data);
+                var data = _context.Products.Update(result);
+                await _context.SaveChangesAsync(cancellationToken);
+                updateProductCommandResponse.SuccessResponse(data.Entity);
             }
             return updateProductCommandResponse;
         }
