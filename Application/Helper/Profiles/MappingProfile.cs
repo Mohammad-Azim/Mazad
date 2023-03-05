@@ -3,28 +3,6 @@ using AutoMapper;
 
 namespace Application.Helper.Profiles
 {
-    // public class MappingProfile : Profile
-    // {
-    //     public MappingProfile()
-    //     {
-    //         CreateMap<CreateUserCommand, User>().ReverseMap();
-    //         CreateMap<UpdateUserCommand, User>().ReverseMap();
-    //         CreateMap<UpdateUserCommand, UserRegisterDto>().ReverseMap(); 
-
-    //         CreateMap<CreateProductCommand, Product>().ReverseMap(); 
-    //         CreateMap<UpdateProductCommand, Product>().ReverseMap(); 
-    //         CreateMap<UpdateProductCommand, ProductDto>().ReverseMap(); 
-
-    //         CreateMap<CreateBidCommand, Bid>().ReverseMap();  
-    //         CreateMap<UpdateBidCommand, Bid>().ReverseMap(); 
-    //         CreateMap<UpdateBidCommand, CreateBidCommand>().ReverseMap(); 
-
-    //         CreateMap<UpdateCategoryCommand, CategoryDto>().ReverseMap(); // IMapFrom<Category>
-    //         CreateMap<Category, CategoryDto>().ReverseMap(); 
-    //         CreateMap<UpdateProductCommand, CreateProductCommand>().ReverseMap();  
-    //     }
-    // }
-
     public class MappingProfile : Profile
     {
         public MappingProfile()
