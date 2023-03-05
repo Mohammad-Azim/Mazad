@@ -11,24 +11,25 @@ namespace Application.Features.Bids.Queries.GetWithEvents
     public class GetBidByIdQueryHandler : IRequestHandler<GetBidByIdQuery, GetBidByIdQueryResponse>
     {
         private readonly ApplicationDbContext _context;
+        private readonly IGetBidByIdQueryResponse _response;
 
-        public GetBidByIdQueryHandler(ApplicationDbContext context)
+        public GetBidByIdQueryHandler(ApplicationDbContext context, IGetBidByIdQueryResponse response)
         {
             _context = context;
+            _response = response;
         }
         public async Task<GetBidByIdQueryResponse> Handle(GetBidByIdQuery request, CancellationToken cancellationToken)
         {
-            var getBidByIdQueryResponse = new GetBidByIdQueryResponse();
             var data = await _context.Bids.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             if (data != null)
             {
-                getBidByIdQueryResponse.SuccessResponse(data);
+                _response.SuccessResponse(data);
             }
             else
             {
-                getBidByIdQueryResponse.NotFoundResponse();
+                _response.NotFoundResponse();
             }
-            return getBidByIdQueryResponse;
+            return (GetBidByIdQueryResponse)_response;
         }
     }
 }

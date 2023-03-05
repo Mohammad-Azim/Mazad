@@ -21,21 +21,24 @@ namespace Application.Features.Bids.Commands.Update
         private readonly IValidator<CreateBidCommand> _validator;
         private readonly IMapper _mapper;
 
-        public UpdateBidCommandHandler(ApplicationDbContext context, IMapper mapper, IValidator<CreateBidCommand> validator)
+        private readonly IUpdateBidCommandResponse _response;
+
+
+        public UpdateBidCommandHandler(ApplicationDbContext context, IValidator<CreateBidCommand> validator, IUpdateBidCommandResponse response, IMapper mapper)
         {
             _context = context;
             _validator = validator;
+            _response = response;
             _mapper = mapper;
         }
 
         public async Task<UpdateBidCommandResponse> Handle(UpdateBidCommand command, CancellationToken cancellationToken)
         {
-            var updateBidCommandResponse = new UpdateBidCommandResponse();
             var bidById = await _context.Bids.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
 
             if (bidById == null)
             {
-                return (UpdateBidCommandResponse)updateBidCommandResponse.NotFoundResponse("Bid Not Found");
+                return (UpdateBidCommandResponse)_response.NotFoundResponse("Bid Not Found");
             }
 
             CreateBidCommand bid = _mapper.Map<CreateBidCommand>(command);
@@ -43,17 +46,17 @@ namespace Application.Features.Bids.Commands.Update
 
             if (validationResult.Errors.Count > 0)
             {
-                updateBidCommandResponse.ErrorsResponse(validationResult.Errors);
+                _response.ErrorsResponse(validationResult.Errors);
             }
 
-            if (updateBidCommandResponse.Success)
+            if (_response.Success)
             {
                 Bid bidToAdd = _mapper.Map<Bid>(command);
                 var data = _context.Bids.Update(bidToAdd);
                 await _context.SaveChangesAsync(cancellationToken);
-                updateBidCommandResponse.SuccessResponse(data.Entity);
+                _response.SuccessResponse(data.Entity);
             }
-            return updateBidCommandResponse;
+            return (UpdateBidCommandResponse)_response;
         }
     }
 }

@@ -1,8 +1,11 @@
 using Application.Features.Bids.Dtos;
 using Application.Helper.Response;
-using Domain.EntityModels;
+using Application.Helper.ServiceExtensions;
 
 namespace Application.Features.Bids.Queries.BidListByProduct
 {
-    public class GetListBidByProductQueryResponse : BaseResponse<ICollection<BidDto>> { }
+    public interface IGetListBidByProductQueryResponse : IBaseResponse<ICollection<BidDto>> { }
+
+    [ScopedRegistration]
+    public class GetListBidByProductQueryResponse : BaseResponse<ICollection<BidDto>>, IGetListBidByProductQueryResponse { }
 }

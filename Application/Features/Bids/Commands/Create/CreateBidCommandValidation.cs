@@ -1,12 +1,15 @@
 using FluentValidation;
 using Application.Context;
 using Microsoft.EntityFrameworkCore;
+using Application.Helper.ServiceExtensions;
 
 namespace Application.Features.Bids.Commands.Create
 {
+
     public class CreateBidCommandValidation : AbstractValidator<CreateBidCommand>
     {
         private readonly ApplicationDbContext _context;
+
         public CreateBidCommandValidation(ApplicationDbContext context)
         {
             _context = context;

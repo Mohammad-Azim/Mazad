@@ -1,7 +1,6 @@
 using Application.Features.Bids.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain.EntityModels;
 using Application.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,16 +15,18 @@ namespace Application.Features.Bids.Queries.BidListByProduct
     public class GetListBidByProductQueryHandler : IRequestHandler<GetBidListByProductQuery, GetListBidByProductQueryResponse>
     {
         private readonly ApplicationDbContext _context;
+        private readonly IGetListBidByProductQueryResponse _response;
+
         private readonly IMapper _mapper;
 
-        public GetListBidByProductQueryHandler(ApplicationDbContext context, IMapper mapper)
+        public GetListBidByProductQueryHandler(ApplicationDbContext context, IGetListBidByProductQueryResponse response, IMapper mapper)
         {
             _context = context;
+            _response = response;
             _mapper = mapper;
         }
         public async Task<GetListBidByProductQueryResponse> Handle(GetBidListByProductQuery request, CancellationToken cancellationToken)
         {
-            var getListBidQueryResponse = new GetListBidByProductQueryResponse();
 
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -33,14 +34,14 @@ namespace Application.Features.Bids.Queries.BidListByProduct
             {
                 var listBids = await _context.Bids.AsQueryable().ProjectTo<BidDto>(_mapper.ConfigurationProvider).Where(b => b.ProductId == product.Id).ToListAsync(cancellationToken);
 
-                getListBidQueryResponse.SuccessResponse(listBids);
+                _response.SuccessResponse(listBids);
             }
             else
             {
-                getListBidQueryResponse.NotFoundResponse();
+                _response.NotFoundResponse();
             }
 
-            return getListBidQueryResponse;
+            return (GetListBidByProductQueryResponse)_response;
         }
     }
 }

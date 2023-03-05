@@ -12,7 +12,7 @@ namespace Application.Helper.ServiceExtensions
 
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => p.IsDefined(scopedRegistration, true) || p.IsDefined(transientRegistration, true) || p.IsDefined(singletonRegistration, true) && !p.IsInterface).Select(s => new
+                .Where(p => (p.IsDefined(scopedRegistration, true) || p.IsDefined(transientRegistration, true) || p.IsDefined(singletonRegistration, true)) && !p.IsInterface).Select(s => new
                 {
                     Service = s.GetInterface($"I{s.Name}"),
                     Implementation = s

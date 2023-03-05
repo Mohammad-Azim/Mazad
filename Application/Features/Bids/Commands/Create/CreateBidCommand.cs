@@ -21,29 +21,30 @@ namespace Application.Features.Bids.Commands.Create
 
         private readonly IHubContext<BidHub> _hubContext;
 
+        private readonly ICreateBidCommandResponse _response;
+
         private readonly IMapper _mapper;
 
         public ModelStateDictionary ModelState { get; set; }
 
-        public CreateBidCommandHandler(ApplicationDbContext context, IValidator<CreateBidCommand> validator, IHubContext<BidHub> hubContext, IMapper mapper)
+        public CreateBidCommandHandler(ApplicationDbContext context, IValidator<CreateBidCommand> validator, IHubContext<BidHub> hubContext, ICreateBidCommandResponse response, IMapper mapper)
         {
             _context = context;
             _validator = validator;
             _mapper = mapper;
             _hubContext = hubContext;
-
+            _response = response;
         }
 
         public async Task<CreateBidCommandResponse> Handle(CreateBidCommand command, CancellationToken cancellationToken)
         {
-            var createBidCommandResponse = new CreateBidCommandResponse();
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
             if (validationResult.Errors.Count > 0)
             {
-                createBidCommandResponse.ErrorsResponse(validationResult.Errors);
+                _response.ErrorsResponse(validationResult.Errors);
             }
-            if (createBidCommandResponse.Success)
+            if (_response.Success)
             {
                 Bid bid = _mapper.Map<Bid>(command);
                 bid.Date = DateTime.UtcNow;
@@ -51,10 +52,10 @@ namespace Application.Features.Bids.Commands.Create
                 var data = await _context.Bids.AddAsync(bid, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                createBidCommandResponse.SuccessResponse(data.Entity);
+                _response.SuccessResponse(data.Entity);
                 await _hubContext.Clients.All.SendAsync("BidAdded", command, cancellationToken);
             }
-            return createBidCommandResponse;
+            return (CreateBidCommandResponse)_response;
         }
     }
 }

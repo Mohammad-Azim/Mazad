@@ -1,8 +1,9 @@
+using Application.Helper.ServiceExtensions;
 using FluentValidation.Results;
 
 namespace Application.Helper.Response
 {
-    public class BaseResponse<T>
+    public class BaseResponse<T> : IBaseResponse<T>
     {
         public bool Success { get; set; }
         public string Message { get; set; }
@@ -46,5 +47,6 @@ namespace Application.Helper.Response
             }
             return this;
         }
+
     }
 }
