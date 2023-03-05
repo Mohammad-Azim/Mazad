@@ -1,6 +1,4 @@
 using Application.Context;
-using Application.Features.Bids.Commands.Create;
-using Application.Features.Products.Commands.Create;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace Application
 {
-    public static class ApplicationServiceRegistration
+    public static class ConfigureServices
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
